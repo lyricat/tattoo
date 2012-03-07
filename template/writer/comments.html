@@ -1,0 +1,50 @@
+{{define "COMMENTS"}}
+
+{{$cur_offset := .Vars.Offset}}
+<div id="comment_area">
+	<h2>Comments</h2>
+	<table id="comment_list" class="area_table">
+		{{range $index, $comm := $.Fn.GetCommentTimeline $cur_offset 20}}
+	  {{with $comm}}
+    <tr>
+        <td>
+            <span>{{.Metadata.Author}}</span>
+        </td>
+        <td>
+            <a href="/{{.Metadata.ArticleName}}">{{.Metadata.ArticleName}}</a>
+        </td>
+        <td>
+            {{.Metadata.CreatedTimeHumanReading|html}}
+        </td>
+        <td>
+            {{.Metadata.IP|html}}
+        </td>
+        <td>
+            <a href="/writer/delete_comment/{{.Metadata.Name|html}}" class="button" style="min-width: 30px; padding: 2px;">X</a>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4" style="width:900px">
+            {{printf "%s" .Text}}
+        </td>
+    </tr>
+    {{end}}
+	{{else}}
+		<tr><td><div>There are no items</div></td></tr>
+	{{end}}
+</table>
+	<div>
+    {{if not .Vars.AtBegin }} 
+			<a href="/writer/overview?pos={{$.Fn.GetCommentTLPos $cur_offset 20}}" class="button">
+				<span class="label">Prev</span>
+			</a>
+		{{end}}
+    {{if not .Vars.AtEnd }} 
+			<a href="/writer/overview?pos={{$.Fn.GetCommentTLPos $cur_offset 20}}" class="button">
+			<span class="label">Next</span>
+		</a>
+		{{end}}
+	</div>
+</div> <!-- comment_area -->
+
+{{end}}

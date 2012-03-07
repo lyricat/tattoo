@@ -1,0 +1,45 @@
+{{define "TAG"}}
+
+{{$offset := $.Vars.Offset}}
+{{$siteURL := $.SiteConfig.SiteURL}}
+
+<ul id="article_list">
+	{{ $tag := .Vars.Tag}}
+	{{ range $index, $article := $.Fn.GetArticleTimelineByTag $offset 3 $tag}}
+	<li class="list_item">
+		<div class="article">
+			<div class="time">
+				{{$ctime := $article.Metadata.GetCreatedTime}}
+				<span class="day">{{$ctime.Day}}</span>
+				<span class="month">{{$article.Metadata.GetShortMonth $ctime}}</span>
+				<br/>
+				<span class="year">{{$ctime.Year}}</span>
+			</div>
+			<div class="comment_count">
+				<a href="{{$siteURL}}/{{ $article.Metadata.Name}}#comments">{{$.Fn.GetArticleCommentCount $article.Metadata.Name}}</a>
+		  </div>
+			<ul class="tags">
+				{{range $tagIndex, $tag := $.Fn.GetArticleTags $article.Metadata.Name}}
+				<li><a class="tag" href="{{$siteURL}}/t/{{$tag}}">{{$tag}}</a></li>
+				{{end}}
+			</ul>
+			<div class="inner">
+				{{with $article.Metadata}}
+				<h2 class="title"><a href="/{{.Name}}">{{.Title}}</a></h2>
+				<div id="metadata_1" class="metadata"></div>
+				{{end}}
+				<div class="text">
+					{{ $article.Text }}
+				</div>
+				<div class="metadata">
+				</div>
+			</div>
+		</div>
+	</li>
+	{{else}}
+	<li>
+		<div>There are no items</div>
+	<li>	
+	{{end}}
+</ul>
+{{end}}

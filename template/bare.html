@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xml:lang="en-US" lang="en-US">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>
+			{{if .Flags.Single}}
+				{{$name := .Vars.Name}}
+				{{$meta:= $.Fn.GetArticleMetadata $name}}
+				{{$meta.Title}}
+				|
+			{{end}}
+			{{.SiteConfig.SiteTitle | html}}
+	</title>
+	<link rel="stylesheet" href="{{.SiteConfig.StaticURL}}/css/style.css" type="text/css" media="screen" /> 
+	<link rel="shortcut icon" type="image/png" href="{{.SiteConfig.StaticURL}}/image/favicon.ico" />    
+	<link href="/feed/atom" type="application/atom+xml" rel="alternate" title="Sitewide ATOM Feed" />    
+	<script type="text/javascript" src="{{.SiteConfig.StaticURL}}/js/jquery.js"></script>
+	<script type="text/javascript">
+			$(document).ready(function () {
+					$('#recent_comments li').hover(function () {
+							$(this).children('.bubble').show();
+					}, function () {
+							$(this).children('.bubble').hide();
+					})
+			});
+	</script>
+</head>
+<body>
+{{template "HEADER" .}}
+<div id="container">
+	{{template "CONTENT" .}}
+	{{template "FOOTER" .}}
+</div>
+<!-- Navigation Utils -->
+<a id="scroll_to_top" href="#" class="v_nav"></a>
+{{ if .Flags.Single}}
+    {{ $cur_name := .Vars.Name }}
+    {{ $next_name := $.Fn.GetNextArticleName $cur_name }}
+    {{ $prev_name := $.Fn.GetPrevArticleName $cur_name }}
+    {{ if $next_name}}
+<a id="next" href="/{{$next_name}}" class="v_nav">Next</a>
+    {{ end}}
+    {{ if $prev_name}}
+<a id="prev" href="/{{$prev_name}}" class="v_nav">Prev</a>
+    {{ end }}
+{{ else }}
+  {{ $cur_offset := .Vars.Offset }}
+	{{ if .Flags.HasTag }}
+		{{ $tag = .Vars.Tag }}
+    {{ if not .Vars.AtBegin }} 
+<a id="prev" href="/t/{{$tag}}?pos={{ $.Fn.GetPrevTLPos $cur_offset 0}}" class="v_nav">Prev</a>
+    {{ end }}
+    {{ if not .Vars.AtEnd}} 
+<a id="next" href="/t/{{$tag}}?pos={{ $.Fn.GetNextTLPos $cur_offset 0}}" class="v_nav">Next</a>
+    {{ end }}
+	{{ else }}
+    {{ if not .Vars.AtBegin }} 
+<a id="prev" href="/?pos={{ $.Fn.GetPrevTLPos $cur_offset 0}}" class="v_nav">Prev</a>
+    {{ end }}
+    {{ if not .Vars.AtEnd }} 
+<a id="next" href="/?pos={{ $.Fn.GetNextTLPos $cur_offset 0}}" class="v_nav">Next</a>
+    {{ end }}
+	{{ end }}
+{{ end }}
+<!-- Debug Info -->
+<div style="display:none"> Cost Time: {{.ContextInfo.During}} microseconds </div>
+</body>
+</html>
+

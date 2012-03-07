@@ -1,0 +1,27 @@
+{{define "HEADER"}}
+<div id="header">
+	<div id="header_inner">
+		<div id="social">
+			<a href="http://twitter.com/shellex" target="_blank" title="Twitter"><img src="/static/image/ic16_twitter.png"></a>
+			<a href="http://www.facebook.com/shellex" target="_blank" title="Facebook"><img src="/static/image/ic16_facebook.png"></a>
+			<a href="http://feeds.feedburner.com/shellex-cn" target="_blank" title="RSS"><img src="/static/image/ic16_rss.png"></a>
+		</div>
+		<h1 id="title"><a href="{{.SiteConfig.SiteURL}}">{{.SiteConfig.SiteTitle}}</a></h1>
+		<div id="description">Live <strong>Strong</strong></div>
+		<ul id="recent_comments">
+			{{range $index, $comm := $.Fn.GetCommentTimeline 0 10 }}
+			<li>
+				<a href="/{{$comm.Metadata.ArticleName}}/#comment_{{$comm.Metadata.Name}}" class="recent_comment">
+					{{if $comm.Metadata.EmailHash}}
+					<img src="http://www.gravatar.com/avatar/{{$comm.Metadata.EmailHash}}?r=g&d=mm&s=32"/>
+					{{else}}
+					<img src="http://www.gravatar.com/avatar/?r=g&d=mm&s=32"/>
+					{{end}}
+				</a>
+				<div class="bubble"><div class="bubble_text">{{$comm.Text}}</div></div>
+			</li>
+			{{end}}
+		</ul>
+	</div>
+</div>
+{{end}}

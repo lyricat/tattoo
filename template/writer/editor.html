@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xml:lang="en-US" lang="en-US">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Writer</title>
+    <link rel="stylesheet" href="/static/css/preview.css" type="text/css" media="screen" /> 
+    <link rel="stylesheet" href="/static/css/writer_common.css" type="text/css" media="screen" /> 
+    <link rel="stylesheet" href="/static/css/writer.css" type="text/css" media="screen" /> 
+    <script type="text/javascript" src="/static/js/jquery.js"></script>
+    <script type="text/javascript" src="/static/js/made.js"></script>
+    <script type="text/javascript" src="/static/js/ace.js"></script>
+    <script type="text/javascript" src="/static/js/mode-markdown.js"></script>
+    <script type="text/javascript" src="/static/js/theme-twilight.js"></script>
+    <script type="text/javascript" src="/static/js/theme-textmate.js"></script> 
+    <script type="text/javascript" src="/static/js/Markdown.Converter.js"></script>
+</head>
+<body>
+<div id="bar">
+    <h1 id="title">Tattoo</h1>
+    <div id="control">
+        <a href="{{.SiteConfig.SiteURL}}/writer" class="button" id="back_button">
+            <span class="label">Back</span>
+        </a>
+        <a href="#" class="button" id="save_button">
+            <span class="label">Save</span>
+        </a>
+        <div id="export_button_wrapper">
+        <a href="#" class="button" id="export_button">
+            <span class="label">Export ▾</span>
+        </a>
+        <ul class="menu" id="export_menu"> 
+            <li>
+            <a class="menuitem" href="#" id="export_source_button">Export Source</a>
+            </li>
+            <li>
+            <a class="menuitem" href="#" id="export_html_button">Export HTML</a>
+            </li>
+            <li>
+            <a class="menuitem" href="#" id="export_full_html_button">Export HTML(Full)</a>
+            </li>
+        </ul>
+        <a href="#" class="button" id="import_button">
+            <span class="label">Import</span>
+        </a>
+        <input type="file" id="import_file_button"/>
+        </div>
+    </div>
+    <div id="color_scheme"><label>Color Scheme</label>
+        <a href="dark" id="color_scheme_dark" class="selected"><span/></a>
+        <a href="light" id="color_scheme_light"><span/></a>
+    </div>
+</div>
+<div id="container">
+    <div id="meta_pane" class="pane">
+        <form method="POST" id="edit_form" name="edit_form" action="/writer/update">
+    {{with .Vars.Article.Metadata}}
+        <input name="orig_name" type="hidden" value="{{.Name}}"/>
+        <table class="inner">
+            <tr>
+                <td><label>Title</label></td>
+                <td><input id="title_box" name="title" class="entry" value="{{.Title}}"/></td>
+            </tr>
+            <tr>
+                <td><label>URL</label></td>
+                <td><input id="url_box" name="url" class="entry" value="{{.Name}}"/></td>
+            </tr>
+            <tr>
+                <td><label>Tags</label></td>
+                <td><input id="tags_box" name="tags" class="entry" value="{{.TagRawList}}"/></td>
+            </tr>
+        </table>
+    {{end}}
+        <textarea id="text_box" name="text" style="display:none">{{ printf "%s" .Vars.Article.Text}}</textarea>
+        </form>
+    </div>
+    <div class="pane" id="input_pane" placeholder="type some markdown code or drag & drop a .md file here"></div>
+    <div id="preview_pane" class="pane">
+        <div id="preview"></div>
+    </div>
+</div>
+</body>
+</html>
+
+

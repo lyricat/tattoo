@@ -1,0 +1,19 @@
+{{define "NAV"}}
+<div id="control">
+    <a href="{{.SiteConfig.SiteURL}}/writer/edit" class="button">
+        <span class="label">New Article</span>
+    </a>
+    <a href="{{.SiteConfig.SiteURL}}/writer/settings" class="button">
+        <span class="label">Settings</span>
+    </a>
+    <a href="/writer/comments" class="button">
+        <span class="label">Comments</span>
+    </a>
+    <a href="{{.SiteConfig.SiteURL}}" class="button">
+        <span class="label">View My Site</span>
+    </a>
+    <a href="{{.SiteConfig.SiteURL}}/guard?action=logout" class="button" style="float:right">
+        <span class="label">Sign Out</span>
+    </a>
+</div>
+{{end}}

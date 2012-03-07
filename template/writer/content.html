@@ -1,0 +1,14 @@
+{{define "CONTENT"}}
+	<div id="content">
+	{{if .Flags.WriterOverview}}
+		{{template "OVERVIEW" .}}
+	{{end}}
+	{{if .Flags.WriterComments}}
+		{{template "COMMENTS" .}}
+	{{end}}
+	{{if .Flags.WriterTags}}
+		{{template "TAGS" .}}
+	{{end}}
+	</div>
+{{end}}
+
