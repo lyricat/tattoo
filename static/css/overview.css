@@ -1,0 +1,55 @@
+a {
+    color: #0066cc;
+    text-decoration: none;
+}
+a:active,
+a:hover {
+    color: #ff4b33;
+}
+#container {
+    width: 960px;
+    padding: 20px;
+    margin: 0 auto;
+}
+
+.area_table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    border: 1px #fff solid;
+    background-color: #f2f2f2;
+    -webkit-box-shadow: 0 1px 3px #A8B1B9;
+    -moz-box-shadow: 0 1px 3px #A8B1B9;
+    box-shadow: 0 1px 3px #A8B1B9;
+    text-shadow: 0 1px 1px white;
+}
+
+.area_table th {
+    font-weight: bold;
+    border: 1px solid #fff;
+    height: 20px;
+    line-height: 20px;
+    padding: 2px 5px;
+}
+
+.area_table td {
+    border: 1px solid #fff;
+    height: 20px;
+    line-height: 20px;
+    padding: 2px 5px;
+    text-align: center;
+}
+.area_table td:first-child {
+    text-align: left;
+}
+
+#control {
+    padding: 20px 0;
+}
+
+.button {
+    padding: 3px 10px;
+}
+.button .label {
+    color: #666;
+}

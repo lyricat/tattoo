@@ -1,0 +1,84 @@
+#preview pre::-webkit-scrollbar-track-piece {
+    background: #141414;
+}
+#preview pre::-webkit-scrollbar-thumb {
+    background: #141414;
+}
+#preview pre::-webkit-scrollbar-thumb:hover {
+    background: #6f6f6f;
+    border:0;
+}
+.ace_editor.dark {
+    background: #141414;
+}
+#preview_pane {
+    overflow: auto;
+}
+#preview {
+    padding: 0 20px;
+}
+
+#preview h1, #preview h2, #preview h3, #preview h4, #preview h5, #preview h6 {
+    font-weight: bold;
+    margin: 0.75em 0;
+}
+#preview h1 {
+    font-size: 2em;
+}
+#preview h2 {
+    font-size: 1.8em;
+}
+#preview h3 {
+    font-size: 1.6em;
+}
+#preview h4 {
+    font-size: 1.4em;
+}
+#preview h5 {
+    font-size: 1.2em;
+}
+#preview h6 {
+    font-size: 1.0em;
+}
+#preview blockquote {
+    padding-left: 40px;
+    border-left: 5px #7d7d7d solid;
+}
+#preview ul, #preview ol {
+    margin-left: 20px;
+}
+#preview pre {
+    margin: 10px;
+    background-color: #141414;
+    padding: 10px;
+    color: #f2f2f2;
+    overflow: auto;
+}
+
+#preview code {
+    font-size: 14px;
+    font-family: 'monospace','Monaco';
+}
+#preview p {
+    margin: 1em 0;
+}
+table {
+    width: 90%;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+th {
+    font-weight: bold;
+    border: 1px solid #aaa;
+}
+
+th.sub {
+    background-color: #f2f2f2;
+}
+
+td {
+    text-align: left;
+    padding: 3px 10px 2px;
+    border: 1px solid #aaa;
+}
