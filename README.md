@@ -8,7 +8,7 @@
 
 ### requirements
 
- - Go weekly
+ - [Go weekly](http://weekly.golang.org)
  - [blackfriday](https://github.com/shellex/blackfriday) that compatible with go weekly. ( orig: [russross](https://github.com/russross/blackfriday) )
 		
 ### build & install
