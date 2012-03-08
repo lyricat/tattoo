@@ -20,8 +20,6 @@ type Config struct {
     StaticURL string
     AuthorName string
     TimelineCount int
-    CacheSize int
-    CommentCacheSize int
 }
 
 var config *Config = nil
@@ -38,8 +36,6 @@ func init() {
     config.StaticURL = config.SiteURL + "/static"
     config.AuthorName = "root"
     config.TimelineCount = 3
-    config.CacheSize = 100
-    config.CommentCacheSize = 200
     sessionToken = GenerateSessionToken()
 }
 
