@@ -2,15 +2,23 @@
 
  - My Blog: [shellex.info](http://shellex.info)
 
-#Build & Install
+#Build & Install & Run
+
+## requirements
+
+ - Go weekly
+ - [blackfriday](https://github.com/shellex/blackfriday) that compatible with go weekly. ( orig: [russross](https://github.com/russross/blackfriday) )
+ 
+
+## build & install
 
 	./all.sh
 
-#Run as a stand-alone server
+## as a stand-alone server
 
 	./tattoo
 
-#Run with Fast-CGI
+## with Fast-CGI
 
 	./tattoo -fcgi
 
