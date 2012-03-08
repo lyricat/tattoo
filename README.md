@@ -26,7 +26,7 @@ build and install tattoo
 
 	./tattoo
 
-## with Fast-CGI
+### with Fast-CGI
 
 	./tattoo -fcgi
 
