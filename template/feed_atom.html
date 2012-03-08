@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+{{.Vars.Declaration}}
 {{$siteURL := .SiteConfig.SiteURL}}
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
 	<title type="text">{{.SiteConfig.SiteTitle}}</title>
@@ -9,18 +9,16 @@
 	<updated>{{if .SiteVars.LastUpdatedTime}}{{printf "%s" .SiteVars.LastUpdatedTime}}{{end}}</updated>
 
 {{range $index, $article := $.Fn.GetArticleTimeline 0 3 }}
-{{with $article}}
-			<entry>
-			<author>
-					<name>{{.Metadata.Author}}</name>
-			</author>
+	{{with $article}}
+		<entry>
+			<author><name>{{.Metadata.Author}}</name></author>
 			<title type="html">{{.Metadata.Title}}</title>
 			<link rel="alternate" type="text/html" href="{{$siteURL}}/{{.Metadata.Name}}/" />
-	<id>{{$siteURL}}/{{.Metadata.Name}}</id>
+			<id>{{$siteURL}}/{{.Metadata.Name}}</id>
 			<updated>{{.Metadata.ModifiedTimeRFC3339}}</updated>
 			<published>{{.Metadata.CreatedTimeRFC3339}}</published>
-			<summary type="html">{{.Text}}</summary>
-	</entry>
-{{end}}
+			<content type="html">{{printf "%s" .Text}}</content>
+		</entry>
+	{{end}}
 {{end}}
 </feed>

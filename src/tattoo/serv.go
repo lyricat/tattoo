@@ -180,9 +180,11 @@ func HandleFeed(c * webapp.Context, pathLevels []string) {
 	if pathLevels[1] == "atom" {
 		var meta *ArticleMetadata
 		var err error
-		meta, err = TattooDB.GetMetadata(TattooDB.ArticleTimeline[0])
-		if err == nil {
-			TattooDB.SetVar("LastUpdatedTime", TimeRFC3339(meta.ModifiedTime))
+		if len(TattooDB.ArticleTimeline) != 0 {
+			meta, err = TattooDB.GetMetadata(TattooDB.ArticleTimeline[0])
+			if err == nil {
+				TattooDB.SetVar("LastUpdatedTime", TimeRFC3339(meta.ModifiedTime))
+			}
 		}
 		err = RenderFeedAtom(c)
 		if err != nil {

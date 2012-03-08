@@ -115,7 +115,9 @@ func RenderGuard(ctx *webapp.Context, hint string) error {
 }
 
 func RenderFeedAtom(ctx *webapp.Context) error {
-	data := MakeData(ctx, nil)
+    vars := make(map[string]interface{})
+	vars["Declaration"] = template.HTML("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
+	data := MakeData(ctx, vars)
 	data.Flags.Feed = true
 	err := ctx.Execute(feedTPL, &data)
     return err
