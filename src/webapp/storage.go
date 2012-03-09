@@ -14,14 +14,6 @@ const (
     OP_SAVE = 0
     )
 
-/*
- Storage:
-            - MODE_SINGLE                   MODE_MULIPLE     
-    FILE      JSON(index)                   JSON(index), STRING(value)
-    GET       JSON/String                   JSON/String
-    SET       JSON/String                   JSON/String  
- */
-
 type Storage interface {
     Get(string)string
     Set(string)string

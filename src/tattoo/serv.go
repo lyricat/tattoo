@@ -11,6 +11,8 @@ import (
 	"html/template"
 	)
 
+const NOT_FOUND_MESSAGE = "Sorry, the page you were looking does not exist."
+
 func isAuthorized(c * webapp.Context) bool {
 	for _, cookie := range c.Request.Cookies() {
 		if cookie.Name == "token" && cookie.Value == GetSessionToken() {
@@ -45,6 +47,8 @@ func HandleRoot(c * webapp.Context) {
 			if len(pathLevels) >= 2 {
 				// tag
 				HandleTag(c, pathLevels[1])
+			} else {
+				Render404page(c, NOT_FOUND_MESSAGE)
 			}
 		} else {
 			// single page
@@ -68,9 +72,7 @@ func HandleHome(c * webapp.Context) {
 func HandleTag(c * webapp.Context, tag string) {
 	tag = strings.Trim(tag, " ")
 	if !TattooDB.HasTag(tag) {
-		c.Error(fmt.Sprintf("%s: %s",
-				webapp.ErrNotFound, ""),
-			http.StatusNotFound)
+		Render404page(c, NOT_FOUND_MESSAGE)
 	}
 	pos, _:= strconv.Atoi(c.Request.FormValue("pos"))
 	if pos > TattooDB.GetTagArticleCount(tag) - 1 {
@@ -261,7 +263,7 @@ func HandleWriter(c * webapp.Context, pathLevels []string) {
 			}
 			c.Redirect("/writer/comments", http.StatusFound)
 		} else {
-			c.Error(fmt.Sprintf("%s", webapp.ErrNotFound), http.StatusNotFound)
+			Render404page(c, NOT_FOUND_MESSAGE)
 		}
 		if err != nil {
 			c.Error(fmt.Sprintf("%s: %s", webapp.ErrInternalServerError, err), http.StatusInternalServerError)
@@ -383,7 +385,7 @@ func HandleSinglePage(c * webapp.Context, pagename string) {
 			TattooDB.UpdateMetadata(meta)
 		}
 	} else {
-		c.Error(fmt.Sprintf("%s", webapp.ErrNotFound), http.StatusNotFound)
+		Render404page(c, NOT_FOUND_MESSAGE)
 	}
 }
 

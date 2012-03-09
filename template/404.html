@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xml:lang="en-US" lang="en-US">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title> 404 NOT FOUND</title>
+	<link rel="stylesheet" href="{{.SiteConfig.StaticURL}}/css/style.css" type="text/css" media="screen" /> 
+	<link rel="shortcut icon" type="image/png" href="{{.SiteConfig.StaticURL}}/image/favicon.ico" />		
+	<style type="text/css">
+		h1 {
+			font-size: 40px;
+		}
+		h2 {
+			font-size: 30px;
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<div id="container">
+		<div id="content">
+			<h1>Hey!</h1>
+			<h2>{{.Vars.Message}}</h2>
+			<p>
+			<a class="button" href="/">Bring me back to earth!</a>
+			</p>
+		</div>
+	</div>
+<!-- Debug Info -->
+<div style="display:none"> Cost Time: {{.ContextInfo.During}} microseconds </div>
+</body>
+</html>
+
+

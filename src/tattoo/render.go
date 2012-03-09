@@ -5,6 +5,8 @@ import (
 	"html/template"
 	"strings"
 	"errors"
+	"net/http"
+	"fmt"
     )
 
 var mainTPL *template.Template
@@ -12,20 +14,11 @@ var writerTPL *template.Template
 var guardTPL *template.Template
 var feedTPL *template.Template
 var editorTPL *template.Template
+var notFoundTPL *template.Template
 
 func InitTemplates() error {
 	var err error
-	mainTPL, err = template.ParseFiles(
-		"template/bare.html",
-		"template/header.html",
-		"template/footer.html",
-		"template/tag.html",
-		"template/article.html",
-		"template/articles.html",
-		"template/content.html")
-	if err != nil {
-		return err
-	}
+	// system templates
 	writerTPL, err = template.ParseFiles(
 		"template/writer/bare.html",
 		"template/writer/nav.html",
@@ -45,6 +38,23 @@ func InitTemplates() error {
 		return err
 	}
 	feedTPL, err = template.ParseFiles("template/feed_atom.html")
+	if err != nil {
+		return err
+	}
+	// required templates
+	mainTPL, err = template.ParseFiles(
+		"template/bare.html",
+		"template/header.html",
+		"template/footer.html",
+		"template/tag.html",
+		"template/article.html",
+		"template/articles.html",
+		"template/content.html")
+	if err != nil {
+		return err
+	}
+	// optional templates
+	notFoundTPL, err = template.ParseFiles("template/404.html")
 	if err != nil {
 		return err
 	}
@@ -119,6 +129,7 @@ func RenderFeedAtom(ctx *webapp.Context) error {
 	vars["Declaration"] = template.HTML("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
 	data := MakeData(ctx, vars)
 	data.Flags.Feed = true
+	ctx.SetHeader("Content-Type", "application/atom+xml")
 	err := ctx.Execute(feedTPL, &data)
     return err
 }
@@ -169,6 +180,24 @@ func RenderWriterComments(ctx *webapp.Context, offset int) error {
 	err := ctx.Execute(writerTPL, &data)
     return err
 }
+
+func Render404page(ctx * webapp.Context, msg string) error {
+	if notFoundTPL != nil {
+		vars := make(map[string]interface{})
+		vars["Message"] = msg
+		vars["URL"] = ctx.Request.RequestURI
+		vars["Referer"] = ctx.Request.Referer()
+		data := MakeData(ctx, vars)
+		err := ctx.Execute(notFoundTPL, &data)
+		return err
+	} else {
+		ctx.Error(fmt.Sprintf("%s: %s", webapp.ErrNotFound, msg),
+			http.StatusNotFound)
+		return nil
+	}
+    return nil
+}
+
 func RenderWriterSettings(ctx *webapp.Context) (string, error) {
     return "", nil
 }

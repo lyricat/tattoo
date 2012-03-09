@@ -24,7 +24,6 @@ type AbsApp interface {
     Run()
     AddHandleFunc(string, func(http.ResponseWriter, *http.Request))
     SetStaticPath(string, string)
-    SetTemplatePath(string)
 }
 
 type App struct {
@@ -47,6 +46,7 @@ type Context struct {
     Request *http.Request
     Application *App
     Info ContextInfo
+	Headers map[string]string
 }
 
 var EmailPattern, URLPattern *regexp.Regexp
@@ -85,21 +85,11 @@ func (ctx * Context) Error(msg string, code int) {
     http.Error(ctx.Writer, msg, code)
 }
 
-func (ctx * Context) Write(html string) {
-    ctx.Info.Message = "OK"
-    ctx.Info.HttpCode = 200
-    ctx.Application.AccessLog(ctx)
-    ctx.Writer.Header().Set("Content-Type", "text/html; charset=UTF-8")
-    ctx.Writer.Header().Set("Connection", "keep-alive")
-    ctx.Writer.Header().Set("Cache-Control", "must-revalidate, max-age=300")
-    if ctx.Info.UseGZip {
-		gw := gzip.NewWriter(ctx.Writer)
-        ctx.Writer.Header().Set("Content-Encoding", "gzip")
-        fmt.Fprintln(gw, html)
-        gw.Close()
-    } else {
-        fmt.Fprintln(ctx.Writer, html)
-    }
+func (ctx * Context) SetHeader(key string, val string) {
+	if ctx.Headers == nil {
+		ctx.Headers = make(map[string]string)
+	}
+	ctx.Headers[key] = val;
 }
 
 func (ctx * Context) Execute(tpl * template.Template, data interface{}) error {
@@ -107,9 +97,18 @@ func (ctx * Context) Execute(tpl * template.Template, data interface{}) error {
     ctx.Info.Message = "OK"
     ctx.Info.HttpCode = 200
     ctx.Application.AccessLog(ctx)
-    ctx.Writer.Header().Set("Content-Type", "text/html; charset=UTF-8")
+    ctx.Writer.Header().Set("Content-Type", "text/html")
     ctx.Writer.Header().Set("Connection", "keep-alive")
     ctx.Writer.Header().Set("Cache-Control", "must-revalidate, max-age=300")
+
+	// overlay headers
+	if ctx.Headers != nil {
+		for k, v := range ctx.Headers {
+			ctx.Writer.Header().Set(k, v)
+		}
+	}
+
+	// compress ?
     if ctx.Info.UseGZip {
 		gw := gzip.NewWriter(ctx.Writer)
         ctx.Writer.Header().Set("Content-Encoding", "gzip")
