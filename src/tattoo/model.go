@@ -77,10 +77,8 @@ type Comment struct {
     Text template.HTML;
 }
 
-type T_BARE struct {
-    Header template.HTML
-    Content template.HTML
-    Footer template.HTML
-    Extra interface{}
+type TagWrapper struct {
+	Name string
+	Count int
 }
 

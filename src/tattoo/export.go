@@ -32,8 +32,9 @@ func (e * Export) GetNextTLPos(offset int, count int) int {
     if next < GetConfig().TimelineCount {
         return 0
     }
-    if next > TattooDB.GetArticleCount() - 1 {
-        return TattooDB.GetArticleCount() - 1
+	total := TattooDB.GetArticleCount() 
+    if next > total - 1 {
+        return total - 1
     }
     return next
 }
@@ -46,8 +47,9 @@ func (e * Export) GetPrevCommentTLPos(offset int, count int) int {
     if prev < 0 {
         return 0
     }
-    if prev > TattooDB.GetCommentCount() - 1 {
-        return TattooDB.GetCommentCount() - 1
+	total := TattooDB.GetCommentCount()
+    if prev > total - 1 {
+        return total - 1
     }
     return prev
 }
@@ -60,12 +62,42 @@ func (e * Export) GetNextCommentTLPos(offset int, count int) int {
     if next < GetConfig().TimelineCount {
         return 0
     }
-    if next > TattooDB.GetCommentCount() - 1 {
-        return TattooDB.GetCommentCount() - 1
+	total := TattooDB.GetCommentCount()
+    if next > total - 1 {
+        return total - 1
     }
     return next
 }
 
+func (e * Export) GetPrevTagTLPos(name string, offset int, count int) int {
+	if count <= 0 {
+		count = GetConfig().TimelineCount
+	}
+	prev := offset - count
+    if prev < 0 {
+        return 0
+    }
+	total := TattooDB.GetTagArticleCount(name)
+    if prev > total - 1 {
+        return total - 1
+    }
+    return prev
+}
+
+func (e * Export) GetNextTagTLPos(name string, offset int, count int) int {
+	if count <= 0 {
+		count = GetConfig().TimelineCount
+	}
+    next := offset + count
+    if next < GetConfig().TimelineCount {
+        return 0
+    }
+	total := TattooDB.GetTagArticleCount(name)
+    if next > total - 1 {
+        return total - 1
+    }
+    return next
+}
 
 func (e * Export) GetCommentTimeline(offset int, count int) []*Comment {
     comments, _ := TattooDB.GetCommentTimeline(offset, count)
@@ -103,4 +135,8 @@ func (e * Export) GetArticleMetadata(name string) *ArticleMetadata {
 func (e * Export) GetArticleTags(name string) []string {
     meta, _ := TattooDB.GetMetadata(name)
 	return meta.Tags
+}
+
+func (e * Export) GetTagList(count int) []TagWrapper {
+	return TattooDB.GetTags()
 }

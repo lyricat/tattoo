@@ -223,6 +223,8 @@ input[type="text"], textarea {
 }
 
 #footer .copyright {
+	clear: both;
+	margin: 40px 0;
 	text-align: center;
 }
 
@@ -279,7 +281,7 @@ input[type="text"], textarea {
 		font-family: "Helvetica",Arial,sans-serif;
 }
 
-.article .inner, .comments .comment {
+.article .inner, .comments .comment, .tag_box .inner {
 	background-color: #fff;
 	margin: 0 20px;
 	border: 1px #CCC solid;
@@ -306,6 +308,10 @@ input[type="text"], textarea {
 	left: 0;
 	padding: 10px 0px 10px 10px;
 	text-align: center;
+}
+
+.article .time_stamp {
+	min-width: 200px;
 }
 
 .article .comment_count {
@@ -618,6 +624,25 @@ input[type="text"], textarea {
 #submit {
 		height: 30px;
 }
+
+#tag_cloud {
+	line-height: 2em;
+}
+
+#tag_cloud .tag {
+	padding: 3px 8px;
+	color: #333;
+	margin: 3px 5px;
+	border-radius: 5px;
+	text-transform: uppercase;
+	padding-left: 20px;
+	background: transparent url(/static/image/ic16_tag.png) 2px center no-repeat;
+}
+
+#tag_cloud .tag:hover {
+	color: #ff4b33;
+}
+
 
 ::-webkit-scrollbar {
 		width: 12px;

@@ -6,7 +6,6 @@ import (
     "strconv"
     "log"
     "html/template"
-    "fmt"
     "regexp"
     "compress/gzip"
     "strings"

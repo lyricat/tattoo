@@ -415,6 +415,28 @@ func (s * TattooStorage) DeleteTag(tagName string) {
 	return
 }
 
+func (s * TattooStorage) GetTags() []TagWrapper {
+    tmp := new (KeyPairs)
+    tmp.Items = make ([]*KeyValuePair, 0)
+	ret := make([]TagWrapper, 0)
+    for name, _ := range s.TagIndexDB.Index {
+        if name == "*" {
+            continue
+        }
+		lst_buff, _ := s.TagIndexDB.GetJSON(name)
+		count := len(lst_buff.([]interface{}))
+        tmp.Items = append(tmp.Items, &KeyValuePair{Key: int64(count), Value:name})
+    }
+    sort.Sort(tmp)
+    for i, j := 0, len(tmp.Items) - 1; i < j; i, j = i + 1, j-1 {
+        tmp.Items[i], tmp.Items[j] = tmp.Items[j], tmp.Items[i]
+    }
+	for _, t := range tmp.Items {
+		ret = append(ret, TagWrapper{Name: t.Value, Count: int(t.Key)})
+	}
+	return ret;
+}
+
 // assigns several tags to a specified article
 func (s * TattooStorage) UpdateArticleTagIndex(name string, tags []string) {
 	// assign

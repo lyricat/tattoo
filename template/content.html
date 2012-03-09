@@ -1,7 +1,6 @@
 {{define "CONTENT"}}
 	<div id="content">
 	{{if .Flags.HasTag}}
-		<div class="archive_hint">Articles Tagged as "{{.Vars.Tag}}"</div>
 		{{template "TAG" .}}
 	{{end}}
 	{{if .Flags.Single}}

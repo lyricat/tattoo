@@ -1,7 +1,12 @@
 {{define "FOOTER"}}
 <div id="footer">
 	<div id="footer_inner">
-		<div class="tag_cloud"></div>
+		<div id="tag_cloud">
+			<h2>Tag Cloud</h2>
+			{{ range $index, $tag := $.Fn.GetTagList 10 }}
+			<a class="tag" href="/t/{{$tag.Name}}">{{$tag.Name}}({{$tag.Count}})</a>
+			{{end}}
+		</div>
 		<div class="copyright">Powered by <a href="https://github.com/shellex/tattoo">TATTOO!</a> and <a href="http://golang.org">Go</a>. All rights reserved.</div>
 	</div>
 </div>
