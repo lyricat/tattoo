@@ -1,13 +1,14 @@
 {{define "CONTENT"}}
 	<div id="content">
-	{{if .Flags.HasTag}}
-		{{template "TAG" .}}
+	{{if .Flags.WriterOverview}}
+		{{template "OVERVIEW" .}}
 	{{end}}
-	{{if .Flags.Single}}
-		{{template "ARTICLE" .}}
+	{{if .Flags.WriterComments}}
+		{{template "COMMENTS" .}}
 	{{end}}
-	{{if .Flags.Home}}
-		{{template "HOME" .}}
+	{{if .Flags.WriterTags}}
+		{{template "TAGS" .}}
 	{{end}}
 	</div>
 {{end}}
+

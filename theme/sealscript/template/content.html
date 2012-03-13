@@ -1,0 +1,13 @@
+{{define "CONTENT"}}
+	<div id="content">
+	{{if .Flags.HasTag}}
+		{{template "TAG" .}}
+	{{end}}
+	{{if .Flags.Single}}
+		{{template "ARTICLE" .}}
+	{{end}}
+	{{if .Flags.Home}}
+		{{template "HOME" .}}
+	{{end}}
+	</div>
+{{end}}
