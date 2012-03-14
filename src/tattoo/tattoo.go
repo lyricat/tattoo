@@ -30,11 +30,11 @@ func main() {
     }
     startUpTime = time.Now().Unix()
     rootPath, _ := os.Getwd()
-    staticPath := path.Join(rootPath, "static")
+    staticPath := path.Join(rootPath, "sys/static")
 
     app := webapp.App{}
 	app.Log("App Starts", "OK")
-    app.SetStaticPath("/writer-static/", staticPath)
+    app.SetStaticPath("/sys/static/", staticPath)
     app.SetHandler("/", HandleRoot)
 
     // Load DB

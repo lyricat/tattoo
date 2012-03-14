@@ -20,24 +20,24 @@ func LoadSystemTemplates() error {
 	var err error
 	// system templates
 	writerTPL, err = template.ParseFiles(
-		"template/bare.html",
-		"template/nav.html",
-		"template/tags.html",
-		"template/comments.html",
-		"template/overview.html",
-		"template/content.html")
+		"sys/template/bare.html",
+		"sys/template/nav.html",
+		"sys/template/tags.html",
+		"sys/template/comments.html",
+		"sys/template/overview.html",
+		"sys/template/content.html")
 	if err != nil {
 		return err
 	}
-	editorTPL, err = template.ParseFiles("template/editor.html")
+	editorTPL, err = template.ParseFiles("sys/template/editor.html")
 	if err != nil {
 		return err
 	}
-	guardTPL, err = template.ParseFiles("template/guard.html")
+	guardTPL, err = template.ParseFiles("sys/template/guard.html")
 	if err != nil {
 		return err
 	}
-	feedTPL, err = template.ParseFiles("template/feed_atom.html")
+	feedTPL, err = template.ParseFiles("sys/template/feed_atom.html")
 	if err != nil {
 		return err
 	}
