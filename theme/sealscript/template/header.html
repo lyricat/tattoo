@@ -1,13 +1,30 @@
 {{define "HEADER"}}
 <div id="header">
+	<div id="nav_wrapper">
+		<div id="nav">
+			<div class="inner">
+				<h1 id="title"><a href="{{.SiteConfig.SiteURL}}">{{.SiteConfig.SiteTitle}}</a></h1>
+				<div id="description" class="seal">Live <strong>Strong</strong></div>
+				<ul class="right">
+					<li><a href="/">Home</a></li>
+					<li class="dot">&bull;</a>
+					<li><a href="/t/tech">Tech</a></li>
+					<li class="dot">&bull;</a>
+					<li><a href="/t/paint">Artworks</a></li>
+					<li class="dot">&bull;</a>
+					<li><a href="/t/linux">Linux</a></li>
+					<li class="dot">&bull;</a>
+					<li><a href="/guard">Login</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
 	<div id="header_inner">
 		<div id="social">
-			<a href="http://twitter.com/shellex" target="_blank" title="Twitter"><img src="/static/image/ic16_twitter.png"></a>
-			<a href="http://www.facebook.com/shellex" target="_blank" title="Facebook"><img src="/static/image/ic16_facebook.png"></a>
-			<a href="http://feeds.feedburner.com/shellex-cn" target="_blank" title="RSS"><img src="/static/image/ic16_rss.png"></a>
+			<a href="http://twitter.com/shellex" target="_blank" title="Follow Me @ Twitter"><img src="/static/image/ic16_twitter.png"></a>
+			<a href="http://github.com/shellex" target="_blank" title="Fork Me @ Github"><img src="/static/image/ic16_github.png"></a>
+			<a href="http://feeds.feedburner.com/shellex-cn" target="_blank" title="Subscribe My Blog"><img src="/static/image/ic16_rss.png"></a>
 		</div>
-		<h1 id="title"><a href="{{.SiteConfig.SiteURL}}">{{.SiteConfig.SiteTitle}}</a></h1>
-		<div id="description" class="seal">Live <strong>Strong</strong></div>
 		<ul id="recent_comments">
 			{{range $index, $comm := $.Fn.GetCommentTimeline 0 10 }}
 			<li>
@@ -22,6 +39,7 @@
 			</li>
 			{{end}}
 		</ul>
+		<div class="sep"></div>
 	</div>
 </div>
 {{end}}

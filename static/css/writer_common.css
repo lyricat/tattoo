@@ -7,43 +7,74 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td {
-    background: transparent;
-    border: 0;
-    margin: 0;
-    padding: 0;
-    vertical-align: baseline;
-    -webkit-font-smoothing: antialiased;
+	background: transparent;
+	border: 0;
+	margin: 0;
+	padding: 0;
+	vertical-align: baseline;
 }
 
 body {
-    line-height: 1;
-    background: #fff;
-    font-size: 14px;
-    font-family:  arial,sans-serif;;
-    background: transparent url(/writer-static/image/body_bg.png) repeat fixed;
-    overflow: auto;
+	line-height: 1;
+	background: #f2f2f2;
+	overflow: auto;
+	font: 14px 'Helvetica Neue',Helvetica,"Hiragino Sans GB","Hiragino Sans GB W3",Arial,sans-serif;
+	color: #494949;
 }
 
+/* Common */
 h1, h2, h3, h4, h5, h6 {
-    margin: 0.5em 0;
-    font-weight: normal;
+	margin: 0.5em 0;
+	font-weight: normal;
+	-webkit-font-smoothing: antialiased;
+}
+a {
+	color: #A0410D;
+	text-decoration: none;
+}
+a:active, a:hover {
+	color: #ff4b33;
+}
+
+input[type="text"], textarea, text[type="password"], .entry {
+	background: #FCFCFC;
+	border: 1px solid #ddd;
+	padding: 8px;
+	outline: none;
+	margin: 0;
+	color: #444;
+	-moz-box-shadow: 1px 1px 4px #F4F4F4 inset;
+	-webkit-box-shadow: 1px 1px 4px #F4F4F4 inset;
+	box-shadow: 1px 1px 4px #F4F4F4 inset;
+}
+input[type="text"]:focus, textarea:focus {
+	border-color: #bbb;
 }
 .button {
-    border-radius: 2px;
-    border: 1px #ccc solid;
-    min-width: 80px;
-    height: 20px;
-    display: inline-block;
-    text-align: center;
-    font-weight: bold;
-    color: #333;
-    line-height: 20px;
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(2%,white), color-stop(4%,#F2F2F2), color-stop(100%,#EEE));
+	border-radius: 2px;
+	border: 1px #ddd solid;
+	min-width: 80px;
+	height: 32px;
+	padding: 0px 12px;
+	display: inline-block;
+	text-align: center;
+	font-weight: bold;
+	color: #666;
+	text-shadow: 0 1px 1px white;
+	line-height: 32px;
+	cursor: pointer;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(2%, #FCFCFC), color-stop(4%,#F2F2F2), color-stop(100%,#EEE));
 }
-.button:hover, .button.hover {
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(2%,white), color-stop(4%,#EEE), color-stop(100%,#DEDEDE));
+.button:hover {
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(2%, #FCFCFC), color-stop(4%,#F8F8F8), color-stop(100%,#F2f2f2));
 }
-.button:active, .button.active {
-    -webkit-box-shadow: inset #ccc 0 0 5px;
-    box-shadow: inset #ccc 0 0 5px;
+.button:active {
+	-webkit-box-shadow: inset #ccc 0 0 5px;
+	-moz-box-shadow: inset #ccc 0 0 5px;
+	box-shadow: inset #ccc 0 0 5px;
+}
+
+#container {
+	margin: 0 auto;
+	width: 960px;
 }

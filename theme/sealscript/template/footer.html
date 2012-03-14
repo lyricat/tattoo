@@ -1,14 +1,33 @@
 {{define "FOOTER"}}
+<div id="footer_wrapper">
 <div id="footer">
 	<div id="footer_inner">
-		<div id="tag_cloud">
+		<div class="tag_cloud col">
 			<h2>Tag Cloud</h2>
 			{{ range $index, $tag := $.Fn.GetTagList 10 }}
 			<a class="tag" href="/t/{{$tag.Name}}">{{$tag.Name}}({{$tag.Count}})</a>
 			{{end}}
 		</div>
-		<div class="copyright">Powered by <a href="https://github.com/shellex/tattoo">TATTOO!</a> and <a href="http://golang.org">Go</a>. All rights reserved.</div>
+		<div class="archives col">
+			<h2>Archives</h2>
+		</div>
+		<div class="links col">
+			<h2>Links</h2>
+			<ul>
+				<li><a href="http://zorayoyo.me">Zora</a></li>
+				<li><a href="http://shellexy.info">Shellex Wang</a></li>
+				<li><a href="http://hotot.org">Project Hotot</a></li>
+			</ul>
+		</div>
+		<div class="copyright">
+			© Shellex Wai, All rights reserved.
+			<span>&bull;</span> 
+			Powered by <a href="https://github.com/shellex/tattoo">TATTOO!</a> and <a href="http://golang.org">Go</a>
+			<span>&bull;</span> 
+			SealScript Theme by <a href="http://shellex.info">Shellex</a>
+		</div>
 	</div>
+</div>
 </div>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
   (function() {

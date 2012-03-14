@@ -616,15 +616,15 @@ func (s * TattooStorage) RenameComments(origName, newName string) {
     } else {
         lst = lst_buff.([]interface{})
     }
-    newList := make([]string, len(lst))
-    for i, k := range lst {
+    newList := make([]string, 0)
+    for _, k := range lst {
         meta, err := s.GetCommentMetadata(k.(string))
         if err != nil {
             continue
         }
         meta.ArticleName = newName
         s.UpdateCommentMetadata(meta)
-        newList[i] = k.(string)
+        newList = append(newList, k.(string))
     }
     s.CommentIndexDB.SetJSON(newName, newList)
     s.CommentIndexDB.Delete(origName)

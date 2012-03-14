@@ -35,7 +35,6 @@ function onresize() {
     $('#container').children('.pane')
         .height(view_h - $('#bar').height - 5);
     $('#input_pane').width(parseInt(view_w/2)+10)
-    $('#meta_pane').width(parseInt(view_w/2)+10)
     $('#preview_pane').width(parseInt(view_w/2)-20);
 }
 function change_theme(theme) {
@@ -138,6 +137,10 @@ $(document).ready(function () {
     $(window).resize(function (event) {
         onresize();
     });
+    $('#optional_meta_switch').bind('DOMSubtreeModified click', function () {
+        console.log(1)
+        onresize();
+    })
     editor = ace.edit("input_pane");
     editor.getSession().setValue("the new text here");
     editor.getSession().setTabSize(4);
@@ -223,7 +226,7 @@ $(document).ready(function () {
     });
 
     // load style for exporting
-    $.get('/static/css/preview.css', function (data) {
+    $.get('/writer-static/css/preview.css', function (data) {
         html_begin = html_begin.replace('{STYLE}', data);
     }); 
 

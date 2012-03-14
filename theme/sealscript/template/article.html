@@ -6,33 +6,32 @@
 {{$siteURL := .SiteConfig.SiteURL}}
 {{with $article}}
 <div class="article">
-	<div class="time seal">
-		{{$ctime := $article.Metadata.GetCreatedTime}}
-		<span class="day">{{$ctime.Day}}</span>
-		<span class="month">{{$article.Metadata.GetShortMonth $ctime}}</span><br/><span class="year">{{$ctime.Year}}</span>
-	</div>
-	<div class="comment_count seal">
-		<a href="{{$siteURL}}/{{ $article.Metadata.Name}}#comments">{{$.Fn.GetArticleCommentCount $name}}</a>
-	</div>
-	<ul class="tags">
-		{{range $tagIndex, $tag := $.Fn.GetArticleTags $article.Metadata.Name}}
-		<li><a class="tag seal" href="{{$siteURL}}/t/{{$tag}}">{{$tag}}</a></li>
-		{{end}}
-	</ul>
 	<div class="inner">
 		{{with .Metadata}}
 		<h2 class="article_title title"><a href="#">{{.Title}}</a></h2>
-		<div class="sep"></div>
-		<div class="metadata"></div>
-		{{end}}
-		<div class="text">
-			{{.Text}}
-		</div>
-		<div class="metadata">
+		<div class="article_meta">
 			<div class="share">
 				<a href="https://twitter.com/share" class="twitter-share-button" data-via="shellex">Tweet</a>
 				<div class="g-plusone" data-size="medium"></div>
 			</div>
+			<span>by</span>
+			{{.Author}}
+			<span>on</span>
+			{{$ctime := .GetCreatedTime}}
+			{{.GetShortMonth $ctime}} {{$ctime.Day}}, {{$ctime.Year}}
+			<span>with</span>
+			<a href="{{$siteURL}}/{{ $article.Metadata.Name}}#comments">{{$.Fn.GetArticleCommentCount .Name}} Comments</a>
+		</div>
+		{{end}}
+		<div class="text">
+			{{.Text}}
+		</div>
+		<div class="big_sep"></div>
+		<div class="article_meta">
+			<span>tagged:</span>
+			{{range $tagIndex, $tag := $.Fn.GetArticleTags $article.Metadata.Name}}
+			<a class="tag" href="{{$siteURL}}/t/{{$tag}}">{{$tag}},</a> 
+			{{end}}
 		</div>
 		<h2 class="comments_title title">{{$.Fn.GetArticleCommentCount $name}} COMMENTS ON "{{$article.Metadata.Title}}"</h2>
 		<ul id="comments" class="comments">
@@ -70,22 +69,20 @@
 			<h3 class="title">Leave a Reply</h3>
 			<form action="/" method="GET" id="comment_form" name="comment" prefix="/comment/" onsubmit="this.method='POST';this.action=this.getAttribute('prefix')+'n'+'e'+'w'">
 				<p><input type="text" name="author" id="author"size="22" tabindex="1" aria-required="true" value="{{.Vars.LastCommentMeta.Author}}">
-				<label for="author"><small>Name (required)</small></label></p>
+				<label for="author">Name (required)</label></p>
 
 				<p><input type="text" name="email" id="email" size="22" tabindex="2" aria-required="true" value="{{.Vars.LastCommentMeta.Email}}">
-				<label for="email"><small>Mail <small>(will not be published or shared)</small> (required)</small></label></p>
+				<label for="email">Mail (will not be published or shared) (required)</label></p>
 
 				<p><input type="text" name="url" id="url" size="22" tabindex="3" value="{{.Vars.LastCommentMeta.URL}}">
-				<label for="url"><small>Website</small></label></p>
-
-				<p>
+				<label for="url">Website</label></p>
 				<p><textarea name="text" id="comment" cols="100%" rows="10" tabindex="4"></textarea></p>
 				<p><input name="submit" class="button" type="submit" id="submit" tabindex="5" value="Submit Comment">
 				<input type="hidden" name="article_name" value="{{$article.Metadata.Name}}"/>
 				</p>
 			</form>
-		</div>
-	</div>
-</div>	
+		</div> <!-- #respond -->
+	</div> <!-- .inner -->
+</div>	<!-- .article -->
 
 {{end}}

@@ -37,36 +37,41 @@ a:hover {
 		color: #ff4b33;
 }
 input[type="text"], textarea {
-		background: #F9F9F9;
-		border: 1px solid #CCC;
-		-moz-box-shadow: inset 1px 1px 1px rgba(0,0,0,0.1);
-		-webkit-box-shadow: inset 1px 1px 1px rgba(0,0,0,0.1);
-		box-shadow: inset 1px 1px 1px rgba(0,0,0,0.1);
-		padding: 2px;
-		outline: none;
+	background: #FCFCFC;
+	border: 1px solid #ddd;
+	padding: 8px;
+	outline: none;
+	margin: 0;
+	color: #444;
+	-moz-box-shadow: 1px 1px 4px #F4F4F4 inset;
+	-webkit-box-shadow: 1px 1px 4px #F4F4F4 inset;
+	box-shadow: 1px 1px 4px #F4F4F4 inset;
 }
-
+input[type="text"]:focus, textarea:focus {
+	border-color: #bbb;
+}
 .button {
-		border-radius: 2px;
-		border: 1px #CCC solid;
-		min-width: 80px;
-		height: 20px;
-		padding: 3px 6px;
-		display: inline-block;
-		text-align: center;
-		font-weight: bold;
-		color: #333;
-		line-height: 20px;
-		background: -webkit-gradient(linear, left top, left bottom, color-stop(2%,white), color-stop(4%,#F2F2F2), color-stop(100%,#EEE));
-		cursor: pointer;
+	border-radius: 2px;
+	border: 1px #ddd solid;
+	min-width: 80px;
+	height: 32px;
+	padding: 0px 12px;
+	display: inline-block;
+	text-align: center;
+	font-weight: bold;
+	color: #666;
+	text-shadow: 0 1px 1px white;
+	line-height: 20px;
+	cursor: pointer;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(2%, #FCFCFC), color-stop(4%,#F2F2F2), color-stop(100%,#EEE));
 }
 .button:hover {
-		background: -webkit-gradient(linear, left top, left bottom, color-stop(2%,white), color-stop(4%,#EEE), color-stop(100%,#DEDEDE));
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(2%, #FCFCFC), color-stop(4%,#F8F8F8), color-stop(100%,#F2f2f2));
 }
 .button:active {
-		-webkit-box-shadow: inset #ccc 0 0 5px;
-		-moz-box-shadow: inset #ccc 0 0 5px;
-		box-shadow: inset #ccc 0 0 5px;
+	-webkit-box-shadow: inset #ccc 0 0 5px;
+	-moz-box-shadow: inset #ccc 0 0 5px;
+	box-shadow: inset #ccc 0 0 5px;
 }
 #container {
 		width: 960px;
