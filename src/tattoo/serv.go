@@ -19,7 +19,7 @@ func isAuthorized(c * webapp.Context) bool {
 			return true
 		}
 	}
-	return true
+	return false
 }
 
 func HandleRoot(c * webapp.Context) {
@@ -289,6 +289,8 @@ func HandleUpdateArticle(c * webapp.Context) {
 	article := new (Article)
 	article.Metadata.Title = strings.Trim(c.Request.FormValue("title")," ")
 	article.Metadata.Name = strings.ToLower(strings.Trim(c.Request.FormValue("url")," "))
+	article.Metadata.FeaturedPicURL = strings.Trim(c.Request.FormValue("fpic")," ")
+	article.Metadata.Summary = strings.Trim(c.Request.FormValue("sum")," ")
 	article.Metadata.Author = GetConfig().AuthorName
 	article.Metadata.ModifiedTime = time.Now().Unix()
 	article.Text = template.HTML(c.Request.FormValue("text"))

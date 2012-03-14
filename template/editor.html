@@ -66,14 +66,14 @@
 					<table class="inner">
 						<tr>
 							<td class="label"><label>Featured Pic</label></td>
-							<td><input id="featured_picture_box" name="featured_picture" class="entry" placeholder="URL of a featured Picture. e.g. http://abc.com/abc.png" value=""/></td>
+							<td><input id="featured_picture_box" name="fpic" class="entry" placeholder="URL of a featured Picture. e.g. http://abc.com/abc.png" value="{{.FeaturedPicURL}}"/></td>
 							<td class="label"><label>Tags</label></td>
 							<td><input id="tags_box" name="tags" placeholder="Separate by comma. e.g. Tag1, Tag2, Tag3" class="entry" value="{{.TagRawList}}"/></td>
 						</tr>
 						<tr>
 							<td class="label"><label>Summary</label></td>
 							<td>
-								<textarea id="summary_box" name="summary" placeholder="Summary of your article" value=""></textarea></td>
+								<textarea id="summary_box" name="sum" placeholder="Summary of your article">{{.Summary}}</textarea></td>
 						</tr>
 					</table>
 					</details>

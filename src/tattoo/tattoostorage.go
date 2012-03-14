@@ -173,12 +173,21 @@ func (s * TattooStorage) GetMetadata(name string) (*ArticleMetadata, error) {
     if err != nil {
         return nil, errors.New(webapp.ErrNotFound)
     }
+	// optional meta
     tags, err = s.MetadataDB.GetString(name + ".tags")
 	if err != nil || len(tags) == 0 {
         meta.Tags = []string{};
 	} else {
 		meta.Tags = strings.Split(tags, ",")
 	}
+    meta.FeaturedPicURL, err = s.MetadataDB.GetString(name + ".fpic")
+    if err != nil {
+        meta.FeaturedPicURL = ""
+    }
+    meta.Summary, err = s.MetadataDB.GetString(name + ".sum")
+    if err != nil {
+        meta.Summary = ""
+    }
     ctime, err = s.MetadataDB.GetString(name + ".ctime")
     if err != nil {
         ctime = "0"
@@ -211,6 +220,9 @@ func (s * TattooStorage) UpdateMetadata(meta *ArticleMetadata) {
     name := meta.Name
     s.MetadataDB.SetString(name + ".author", meta.Author)
     s.MetadataDB.SetString(name + ".title", meta.Title)
+	// optional metadata
+    s.MetadataDB.SetString(name + ".fpic", meta.FeaturedPicURL)
+    s.MetadataDB.SetString(name + ".sum", meta.Summary)
 	s.MetadataDB.SetString(name + ".tags", strings.Join(meta.Tags, ","))
     ctime := strconv.FormatInt(meta.CreatedTime, 10)
     s.MetadataDB.SetString(name + ".ctime", ctime)

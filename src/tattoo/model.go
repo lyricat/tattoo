@@ -11,6 +11,8 @@ type ArticleMetadata struct {
     Author string
     Title string
 	Tags []string
+	FeaturedPicURL string
+	Summary string
     CreatedTime int64
     ModifiedTime int64
     Hits int64
