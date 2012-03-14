@@ -5,93 +5,87 @@
 {{$article := $.Fn.GetArticle $name}}
 {{$siteURL := .SiteConfig.SiteURL}}
 {{with $article}}
-		<div class="article">
-			<div class="time">
-				{{$ctime := $article.Metadata.GetCreatedTime}}
-				<span class="day">{{$ctime.Day}}</span>
-				<span class="month">{{$article.Metadata.GetShortMonth $ctime}}</span>
-				<br/>
-				<span class="year">{{$ctime.Year}}</span>
+<div class="article">
+	<div class="time seal">
+		{{$ctime := $article.Metadata.GetCreatedTime}}
+		<span class="day">{{$ctime.Day}}</span>
+		<span class="month">{{$article.Metadata.GetShortMonth $ctime}}</span><br/><span class="year">{{$ctime.Year}}</span>
+	</div>
+	<div class="comment_count seal">
+		<a href="{{$siteURL}}/{{ $article.Metadata.Name}}#comments">{{$.Fn.GetArticleCommentCount $name}}</a>
+	</div>
+	<ul class="tags">
+		{{range $tagIndex, $tag := $.Fn.GetArticleTags $article.Metadata.Name}}
+		<li><a class="tag seal" href="{{$siteURL}}/t/{{$tag}}">{{$tag}}</a></li>
+		{{end}}
+	</ul>
+	<div class="inner">
+		{{with .Metadata}}
+		<h2 class="article_title title"><a href="#">{{.Title}}</a></h2>
+		<div class="sep"></div>
+		<div class="metadata"></div>
+		{{end}}
+		<div class="text">
+			{{.Text}}
+		</div>
+		<div class="metadata">
+			<div class="share">
+				<a href="https://twitter.com/share" class="twitter-share-button" data-via="shellex">Tweet</a>
+				<div class="g-plusone" data-size="medium"></div>
 			</div>
-			<div class="comment_count">
-				<a href="{{$siteURL}}/{{ $article.Metadata.Name}}#comments">{{$.Fn.GetArticleCommentCount $name}}</a>
-		  </div>
-			<ul class="tags">
-				{{range $tagIndex, $tag := $.Fn.GetArticleTags $article.Metadata.Name}}
-				<li><a class="tag" href="{{$siteURL}}/t/{{$tag}}">{{$tag}}</a></li>
-				{{end}}
-			</ul>
-			<div class="inner">
-				{{with .Metadata}}
-				<h2 class="title"><a href="#">{{.Title}}</a></h2>
-				<div id="metadata_1" class="metadata"></div>
-				{{end}}
-				<div class="text">
-						{{.Text}}
-				</div>
-				<div class="metadata">
-					<div class="share">
-						<a href="https://twitter.com/share" class="twitter-share-button" data-via="shellex">Tweet</a>
-						<div class="g-plusone" data-size="medium"></div>
-						</div>
-				</div>
-			</div>
-		</div>	
+		</div>
+		<h2 class="comments_title title">{{$.Fn.GetArticleCommentCount $name}} COMMENTS ON "{{$article.Metadata.Title}}"</h2>
 		<ul id="comments" class="comments">
-				{{range $index, $comm := $.Fn.GetArticleComments $name}}
-				{{with $comm}}
-				<li id="comment_{{.Metadata.Name}}" class="comment">
-
-				<div class="comment_avatar">
-						{{if .Metadata.EmailHash}}
-						<img src="http://www.gravatar.com/avatar/{{.Metadata.EmailHash}}?r=g&d=mm&s=48"/>
-						{{else}}
-						<img src="http://www.gravatar.com/avatar/?r=g&d=mm&s=48"/>
-						{{end}}
-				</div>
+			{{range $index, $comm := $.Fn.GetArticleComments $name}}
+			{{with $comm}}
+			<li id="comment_{{.Metadata.Name}}" class="comment">
+			<div class="avatar">
+				{{if .Metadata.EmailHash}}
+				<img src="http://www.gravatar.com/avatar/{{.Metadata.EmailHash}}?r=g&d=mm&s=48"/>
+				{{else}}
+				<img src="http://www.gravatar.com/avatar/?r=g&d=mm&s=48"/>
+				{{end}}
+			</div>
+			<div class="comment_body">
 				<div class="comment_meta">
-						<a href="{{$url}}/#comment_{{.Metadata.Name}}" title="{{.Metadata.UAgent}}" rel="nofollow">
-								{{.Metadata.CreatedTimeHumanReading}}
-						</a>
+					{{if .Metadata.URL}}
+					<a href="{{.Metadata.URL}}" rel="external nofollow" class="comment_author_url author">{{.Metadata.Author | html}}</a>
+					{{else}}
+					<span rel="external nofollow" class="comment_author_url author">{{.Metadata.Author}}</span>
+					{{end}}
+					<a href="{{$url}}/#comment_{{.Metadata.Name}}" title="{{.Metadata.UAgent}}" rel="nofollow" class="time">
+						{{.Metadata.CreatedTimeHumanReading}}
+					</a>
 				</div>
-				<div class="comment_body">
-						<cite class="comment_author">
-						{{if .Metadata.URL}}
-								<a href="{{.Metadata.URL}}" rel="external nofollow" class="comment_author_url">{{.Metadata.Author | html}}</a>
-						{{else}}
-								<span rel="external nofollow" class="comment_author_url">{{.Metadata.Author}}</span>
-						{{end}}
-						</cite>
-						<span class="says">says:</span>
-						<div class="comment_text">{{.Text}}</div>
-						<div class="control">
-								<a href="#respond" title="Notify this pumpkin." onclick="document.getElementById('comment').focus();document.getElementById('comment').value += '@[{{.Metadata.Author}}](#comment_{{.Metadata.Name}}) '">[Reply]</a>
-						</div>
-				</div>
-				</li>
-				{{end}}
-				{{end}}
+				<div class="comment_text">{{.Text}}</div>
+			</div>
+			<a href="#respond" class="reply" title="Notify this pumpkin." onclick="document.getElementById('comment').focus();document.getElementById('comment').value += '@[{{.Metadata.Author}}](#comment_{{.Metadata.Name}}) '">Reply</a>
+			<div class="sep"></div>
+			</li>
+			{{end}}
+			{{end}}
 		</ul>
-{{end}}
+		{{end}}
 		<div id="respond" class="comments_reply">
+			<h3 class="title">Leave a Reply</h3>
+			<form action="/" method="GET" id="comment_form" name="comment" prefix="/comment/" onsubmit="this.method='POST';this.action=this.getAttribute('prefix')+'n'+'e'+'w'">
+				<p><input type="text" name="author" id="author"size="22" tabindex="1" aria-required="true" value="{{.Vars.LastCommentMeta.Author}}">
+				<label for="author"><small>Name (required)</small></label></p>
 
- <h3>Leave a Reply</h3>
- <form action="/" method="GET" id="comment_form" name="comment" prefix="/comment/" onsubmit="this.method='POST';this.action=this.getAttribute('prefix')+'n'+'e'+'w'">
-		 <p><input type="text" name="author" id="author"size="22" tabindex="1" aria-required="true" value="{{.Vars.LastCommentMeta.Author}}">
-	<label for="author"><small>Name (required)</small></label></p>
+				<p><input type="text" name="email" id="email" size="22" tabindex="2" aria-required="true" value="{{.Vars.LastCommentMeta.Email}}">
+				<label for="email"><small>Mail <small>(will not be published or shared)</small> (required)</small></label></p>
 
-	<p><input type="text" name="email" id="email" size="22" tabindex="2" aria-required="true" value="{{.Vars.LastCommentMeta.Email}}">
-	<label for="email"><small>Mail <small>(will not be published or shared)</small> (required)</small></label></p>
+				<p><input type="text" name="url" id="url" size="22" tabindex="3" value="{{.Vars.LastCommentMeta.URL}}">
+				<label for="url"><small>Website</small></label></p>
 
-	<p><input type="text" name="url" id="url" size="22" tabindex="3" value="{{.Vars.LastCommentMeta.URL}}">
-	<label for="url"><small>Website</small></label></p>
-	
-	<p>
-	<p><textarea name="text" id="comment" cols="100%" rows="10" tabindex="4"></textarea></p>
-	<p><input name="submit" class="button" type="submit" id="submit" tabindex="5" value="Submit Comment">
-	<input type="hidden" name="article_name" value="{{$article.Metadata.Name}}"/>
-	</p>
-	</form>
- </div>
+				<p>
+				<p><textarea name="text" id="comment" cols="100%" rows="10" tabindex="4"></textarea></p>
+				<p><input name="submit" class="button" type="submit" id="submit" tabindex="5" value="Submit Comment">
+				<input type="hidden" name="article_name" value="{{$article.Metadata.Name}}"/>
+				</p>
+			</form>
+		</div>
+	</div>
+</div>	
 
 {{end}}

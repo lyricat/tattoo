@@ -1,0 +1,93 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+		background: transparent;
+		border: 0;
+		margin: 0;
+		padding: 0;
+		vertical-align: baseline;
+}
+
+body {
+		line-height: 1;
+		background: #fff;
+		background: transparent url(/writer-static/image/body_bg.png) repeat fixed;
+		overflow: auto;
+		font: 14px 'Helvetica Neue',Helvetica,"Hiragino Sans GB","Hiragino Sans GB W3",Arial,sans-serif;
+		color: #494949;
+}
+
+h1, h2, h3, h4, h5, h6 {
+		margin: 0.5em 0;
+		font-weight: normal;
+		-webkit-font-smoothing: antialiased;
+}
+a {
+		color: #0066cc;
+		text-decoration: none;
+}
+a:active,
+a:hover {
+		color: #ff4b33;
+}
+input[type="text"], textarea {
+		background: #F9F9F9;
+		border: 1px solid #CCC;
+		-moz-box-shadow: inset 1px 1px 1px rgba(0,0,0,0.1);
+		-webkit-box-shadow: inset 1px 1px 1px rgba(0,0,0,0.1);
+		box-shadow: inset 1px 1px 1px rgba(0,0,0,0.1);
+		padding: 2px;
+		outline: none;
+}
+
+.button {
+		border-radius: 2px;
+		border: 1px #CCC solid;
+		min-width: 80px;
+		height: 20px;
+		padding: 3px 6px;
+		display: inline-block;
+		text-align: center;
+		font-weight: bold;
+		color: #333;
+		line-height: 20px;
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(2%,white), color-stop(4%,#F2F2F2), color-stop(100%,#EEE));
+		cursor: pointer;
+}
+.button:hover {
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(2%,white), color-stop(4%,#EEE), color-stop(100%,#DEDEDE));
+}
+.button:active {
+		-webkit-box-shadow: inset #ccc 0 0 5px;
+		-moz-box-shadow: inset #ccc 0 0 5px;
+		box-shadow: inset #ccc 0 0 5px;
+}
+#container {
+		width: 960px;
+		margin: 0 auto;
+}
+
+#header {
+		height: 5px;
+		margin-bottom: 175px;
+		border-bottom: 1px white solid;
+		background: #F2F2F2;
+		-webkit-box-shadow: 0 1px 3px #A8B1B9;
+		box-shadow: 0 1px 3px #A8B1B9;
+}
+
+#header_inner {
+		width: 880px;
+		margin: 0 auto;
+		position: relative;
+		padding: 40px 0;
+		text-align: center;
+}
+
+

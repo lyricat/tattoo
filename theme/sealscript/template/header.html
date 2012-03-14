@@ -7,11 +7,11 @@
 			<a href="http://feeds.feedburner.com/shellex-cn" target="_blank" title="RSS"><img src="/static/image/ic16_rss.png"></a>
 		</div>
 		<h1 id="title"><a href="{{.SiteConfig.SiteURL}}">{{.SiteConfig.SiteTitle}}</a></h1>
-		<div id="description">Live <strong>Strong</strong></div>
+		<div id="description" class="seal">Live <strong>Strong</strong></div>
 		<ul id="recent_comments">
 			{{range $index, $comm := $.Fn.GetCommentTimeline 0 10 }}
 			<li>
-				<a href="/{{$comm.Metadata.ArticleName}}/#comment_{{$comm.Metadata.Name}}" class="recent_comment">
+				<a href="/{{$comm.Metadata.ArticleName}}/#comment_{{$comm.Metadata.Name}}" class="avatar recent_comment">
 					{{if $comm.Metadata.EmailHash}}
 					<img src="http://www.gravatar.com/avatar/{{$comm.Metadata.EmailHash}}?r=g&d=mm&s=32"/>
 					{{else}}

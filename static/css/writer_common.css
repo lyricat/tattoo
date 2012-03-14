@@ -20,7 +20,7 @@ body {
     background: #fff;
     font-size: 14px;
     font-family:  arial,sans-serif;;
-    background: transparent url(/static/image/body_bg.png) repeat fixed;
+    background: transparent url(/writer-static/image/body_bg.png) repeat fixed;
     overflow: auto;
 }
 

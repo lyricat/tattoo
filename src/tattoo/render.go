@@ -16,24 +16,24 @@ var feedTPL *template.Template
 var editorTPL *template.Template
 var notFoundTPL *template.Template
 
-func InitTemplates() error {
+func LoadSystemTemplates() error {
 	var err error
 	// system templates
 	writerTPL, err = template.ParseFiles(
-		"template/writer/bare.html",
-		"template/writer/nav.html",
-		"template/writer/tags.html",
-		"template/writer/comments.html",
-		"template/writer/overview.html",
-		"template/writer/content.html")
+		"template/bare.html",
+		"template/nav.html",
+		"template/tags.html",
+		"template/comments.html",
+		"template/overview.html",
+		"template/content.html")
 	if err != nil {
 		return err
 	}
-	editorTPL, err = template.ParseFiles("template/writer/editor.html")
+	editorTPL, err = template.ParseFiles("template/editor.html")
 	if err != nil {
 		return err
 	}
-	guardTPL, err = template.ParseFiles("template/writer/guard.html")
+	guardTPL, err = template.ParseFiles("template/guard.html")
 	if err != nil {
 		return err
 	}
@@ -41,20 +41,26 @@ func InitTemplates() error {
 	if err != nil {
 		return err
 	}
+	return err
+}
+
+func LoadThemeTemplates(themeName string) error {
+	var err error
 	// required templates
 	mainTPL, err = template.ParseFiles(
-		"template/bare.html",
-		"template/header.html",
-		"template/footer.html",
-		"template/tag.html",
-		"template/article.html",
-		"template/articles.html",
-		"template/content.html")
+		fmt.Sprintf("theme/%s/template/bare.html", themeName),
+		fmt.Sprintf("theme/%s/template/header.html", themeName),
+		fmt.Sprintf("theme/%s/template/footer.html", themeName),
+		fmt.Sprintf("theme/%s/template/tag.html", themeName),
+		fmt.Sprintf("theme/%s/template/article.html", themeName),
+		fmt.Sprintf("theme/%s/template/articles.html", themeName),
+		fmt.Sprintf("theme/%s/template/content.html", themeName))
 	if err != nil {
 		return err
 	}
 	// optional templates
-	notFoundTPL, err = template.ParseFiles("template/404.html")
+	notFoundTPL, err = template.ParseFiles(
+		fmt.Sprintf("theme/%s/template/404.html", themeName))
 	if err != nil {
 		return err
 	}
