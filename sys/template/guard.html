@@ -4,30 +4,28 @@
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Sign in</title>
 	<link rel="stylesheet" href="/sys/static/css/writer_common.css" type="text/css" media="screen" /> 
+	<style type="text/css">
+		#content p {
+			margin: 10px 0px;
+		}
+		form {
+			text-align: center;
+			margin: 20px 0px 80px 0px;
+		}
+	</style>
 </head>
 <body>
 <div id="container">
-	<div id="content" style="padding-top: 80px; width: 400px; text-align:center">
+	<div id="content" style="padding-top: 80px; width: 400px; margin: 0 auto;">
 		<form name="guard" action="guard" method="POST">
-		<table style="margin: 0 auto;">
-			<tr>
-				<td>
-					<input class="entry" style="width:220px" id="password_entry" name="certificate" placeholder="Password" type="password">
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<a class="button" type="button" href="javascript:document.forms.guard.submit()"/>Sign in</a>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<div style="color:red;text-align:center;">
-					</div>
-				</td>
-			</tr>
-		</table>
+			<p>
+				<input class="entry" style="width:220px" id="password_entry" name="certificate" 
+				placeholder="Password" type="password"/>
+				<a class="button" type="button" href="javascript:document.forms.guard.submit()"/>Sign </a>
+			</p>
+			<div style="color:red;text-align:center;"></div>
 		</form>
+		<p><a href="/" title="Back to blog">← Bring Me Back to Earch.</a></p>
 	</div>
 </div>
 </body>

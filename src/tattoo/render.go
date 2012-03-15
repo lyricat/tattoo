@@ -1,13 +1,13 @@
 package main
 
 import (
-    "webapp"
-	"html/template"
-	"strings"
 	"errors"
-	"net/http"
 	"fmt"
-    )
+	"html/template"
+	"net/http"
+	"strings"
+	"webapp"
+)
 
 var mainTPL *template.Template
 var writerTPL *template.Template
@@ -67,127 +67,127 @@ func LoadThemeTemplates(themeName string) error {
 	return err
 }
 
-func RenderSinglePage(ctx *webapp.Context, name string, lastMeta * CommentMetadata) error {
-    vars := make(map[string]interface{})
-    vars["Name"] = name
-    vars["LastCommentMeta"] = lastMeta
+func RenderSinglePage(ctx *webapp.Context, name string, lastMeta *CommentMetadata) error {
+	vars := make(map[string]interface{})
+	vars["Name"] = name
+	vars["LastCommentMeta"] = lastMeta
 	data := MakeData(ctx, vars)
 	data.Flags.Single = true
 	err := ctx.Execute(mainTPL, &data)
-    return err
+	return err
 }
 
 func RenderTagPage(ctx *webapp.Context, offset int, tag string) error {
-    vars := make(map[string]interface{})
+	vars := make(map[string]interface{})
 	tag = strings.Trim(tag, " ")
-	if ! TattooDB.HasTag(tag) {
+	if !TattooDB.HasTag(tag) {
 		return errors.New(webapp.ErrNotFound)
 	}
 
-    vars["Offset"] = offset
+	vars["Offset"] = offset
 	vars["Tag"] = tag
-    vars["AtBegin"] = false
-    vars["AtEnd"] = false
-    if TattooDB.GetTagArticleCount(tag) - 1 - offset < GetConfig().TimelineCount {
-        vars["AtEnd"] = true
-    }
-    if offset < GetConfig().TimelineCount {
-        vars["AtBegin"] = true
-    }
+	vars["AtBegin"] = false
+	vars["AtEnd"] = false
+	if TattooDB.GetTagArticleCount(tag)-1-offset < GetConfig().TimelineCount {
+		vars["AtEnd"] = true
+	}
+	if offset < GetConfig().TimelineCount {
+		vars["AtBegin"] = true
+	}
 	data := MakeData(ctx, vars)
 	data.Flags.HasTag = true
 	err := ctx.Execute(mainTPL, &data)
-    return err
+	return err
 }
 
 func RenderHomePage(ctx *webapp.Context, offset int) error {
-    vars := make(map[string]interface{})
-    vars["Offset"] = offset
+	vars := make(map[string]interface{})
+	vars["Offset"] = offset
 
 	vars["AtBegin"] = false
-    vars["AtEnd"] = false
-    vars["Offset"] = offset
-    if TattooDB.GetArticleCount() - 1 - offset < GetConfig().TimelineCount {
-        vars["AtEnd"] = true
-    }
-    if offset < GetConfig().TimelineCount {
-        vars["AtBegin"] = true
-    }
+	vars["AtEnd"] = false
+	vars["Offset"] = offset
+	if TattooDB.GetArticleCount()-1-offset < GetConfig().TimelineCount {
+		vars["AtEnd"] = true
+	}
+	if offset < GetConfig().TimelineCount {
+		vars["AtBegin"] = true
+	}
 	data := MakeData(ctx, vars)
 	data.Flags.Home = true
 	err := ctx.Execute(mainTPL, &data)
-    return err
+	return err
 }
 
 func RenderGuard(ctx *webapp.Context, hint string) error {
-    vars := make(map[string]interface{})
+	vars := make(map[string]interface{})
 	vars["Error"] = ""
 	if len(hint) != 0 {
 		vars["Error"] = hint
 	}
 	data := MakeData(ctx, vars)
 	err := ctx.Execute(guardTPL, &data)
-    return err
+	return err
 }
 
 func RenderFeedAtom(ctx *webapp.Context) error {
-    vars := make(map[string]interface{})
+	vars := make(map[string]interface{})
 	vars["Declaration"] = template.HTML("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
 	data := MakeData(ctx, vars)
 	data.Flags.Feed = true
 	ctx.SetHeader("Content-Type", "application/atom+xml")
 	err := ctx.Execute(feedTPL, &data)
-    return err
+	return err
 }
 
 func RenderWriterEditor(ctx *webapp.Context, article *Article) error {
-    vars := make(map[string]interface{})
+	vars := make(map[string]interface{})
 	vars["Article"] = article
 	data := MakeData(ctx, vars)
 	data.Flags.WriterEditor = true
 	err := ctx.Execute(editorTPL, &data)
-    return err
+	return err
 }
 
 func RenderWriterOverview(ctx *webapp.Context, offset int) error {
-    vars := make(map[string]interface{})
-    vars["Offset"] = offset
+	vars := make(map[string]interface{})
+	vars["Offset"] = offset
 
 	vars["AtBegin"] = false
-    vars["AtEnd"] = false
-    vars["Offset"] = offset
-    if TattooDB.GetArticleCount() - 1 - offset < 20 {
-        vars["AtEnd"] = true
-    }
-    if offset < 20 {
-        vars["AtBegin"] = true
-    }
+	vars["AtEnd"] = false
+	vars["Offset"] = offset
+	if TattooDB.GetArticleCount()-1-offset < 20 {
+		vars["AtEnd"] = true
+	}
+	if offset < 20 {
+		vars["AtBegin"] = true
+	}
 	data := MakeData(ctx, vars)
 	data.Flags.WriterOverview = true
 	err := ctx.Execute(writerTPL, &data)
-    return err
+	return err
 }
 
 func RenderWriterComments(ctx *webapp.Context, offset int) error {
-    vars := make(map[string]interface{})
-    vars["Offset"] = offset
+	vars := make(map[string]interface{})
+	vars["Offset"] = offset
 
 	vars["AtBegin"] = false
-    vars["AtEnd"] = false
-    vars["Offset"] = offset
-    if TattooDB.GetCommentCount() - 1 - offset < 20 {
-        vars["AtEnd"] = true
-    }
-    if offset < 20 {
-        vars["AtBegin"] = true
-    }
+	vars["AtEnd"] = false
+	vars["Offset"] = offset
+	if TattooDB.GetCommentCount()-1-offset < 20 {
+		vars["AtEnd"] = true
+	}
+	if offset < 20 {
+		vars["AtBegin"] = true
+	}
 	data := MakeData(ctx, vars)
 	data.Flags.WriterComments = true
 	err := ctx.Execute(writerTPL, &data)
-    return err
+	return err
 }
 
-func Render404page(ctx * webapp.Context, msg string) error {
+func Render404page(ctx *webapp.Context, msg string) error {
 	if notFoundTPL != nil {
 		vars := make(map[string]interface{})
 		vars["Message"] = msg
@@ -201,11 +201,9 @@ func Render404page(ctx * webapp.Context, msg string) error {
 			http.StatusNotFound)
 		return nil
 	}
-    return nil
+	return nil
 }
 
 func RenderWriterSettings(ctx *webapp.Context) (string, error) {
-    return "", nil
+	return "", nil
 }
-
-

@@ -1,19 +1,19 @@
 package main
 
 import (
-	"webapp"
 	"fmt"
-	"net/http"
-	"strings"
-	"strconv"
-	"time"
-	"net/url"
 	"html/template"
-	)
+	"net/http"
+	"net/url"
+	"strconv"
+	"strings"
+	"time"
+	"webapp"
+)
 
 const NOT_FOUND_MESSAGE = "Sorry, the page you were looking does not exist."
 
-func isAuthorized(c * webapp.Context) bool {
+func isAuthorized(c *webapp.Context) bool {
 	for _, cookie := range c.Request.Cookies() {
 		if cookie.Name == "token" && cookie.Value == GetSessionToken() {
 			return true
@@ -22,10 +22,11 @@ func isAuthorized(c * webapp.Context) bool {
 	return false
 }
 
-func HandleRoot(c * webapp.Context) {
+func HandleRoot(c *webapp.Context) {
 	c.Info.UseGZip = strings.Index(c.Request.Header.Get("Accept-Encoding"), "gzip") > -1
 	c.Info.StartTime = time.Now()
 	urlPath := c.Request.URL.Path
+
 	pathLevels := strings.Split(strings.Trim(urlPath, "/"), "/")
 	if urlPath == "/" {
 		// home page
@@ -57,9 +58,9 @@ func HandleRoot(c * webapp.Context) {
 	}
 }
 
-func HandleHome(c * webapp.Context) {
-	pos, _:= strconv.Atoi(c.Request.FormValue("pos"))
-	if pos > TattooDB.GetArticleCount() - 1 {
+func HandleHome(c *webapp.Context) {
+	pos, _ := strconv.Atoi(c.Request.FormValue("pos"))
+	if pos > TattooDB.GetArticleCount()-1 {
 		c.Redirect("/", http.StatusFound)
 		return
 	}
@@ -69,31 +70,31 @@ func HandleHome(c * webapp.Context) {
 	}
 }
 
-func HandleTag(c * webapp.Context, tag string) {
+func HandleTag(c *webapp.Context, tag string) {
 	tag = strings.Trim(tag, " ")
 	if !TattooDB.HasTag(tag) {
 		Render404page(c, NOT_FOUND_MESSAGE)
 	}
-	pos, _:= strconv.Atoi(c.Request.FormValue("pos"))
-	if pos > TattooDB.GetTagArticleCount(tag) - 1 {
+	pos, _ := strconv.Atoi(c.Request.FormValue("pos"))
+	if pos > TattooDB.GetTagArticleCount(tag)-1 {
 		c.Redirect("/", http.StatusFound)
 		return
 	}
 	err := RenderTagPage(c, pos, tag)
 	if err != nil {
 		c.Error(fmt.Sprintf("%s: %s",
-				webapp.ErrInternalServerError, err),
+			webapp.ErrInternalServerError, err),
 			http.StatusInternalServerError)
 	}
 }
 
-func HandleGuard(c * webapp.Context) {
+func HandleGuard(c *webapp.Context) {
 	var err error
 	action := c.Request.FormValue("action")
 	if action == "logout" {
 		RevokeSessionTokon()
 		c.Redirect("/guard", http.StatusFound)
-		return;
+		return
 	}
 	if c.Request.Method == "POST" {
 		cert := c.Request.FormValue("certificate")
@@ -114,7 +115,7 @@ func HandleGuard(c * webapp.Context) {
 				c.Error(fmt.Sprintf("%s: %s", webapp.ErrInternalServerError, err), http.StatusInternalServerError)
 			}
 		}
-	} else if (c.Request.Method == "GET") {
+	} else if c.Request.Method == "GET" {
 		err = RenderGuard(c, "")
 		if err != nil {
 			c.Error(fmt.Sprintf("%s: %s", webapp.ErrInternalServerError, err), http.StatusInternalServerError)
@@ -122,10 +123,10 @@ func HandleGuard(c * webapp.Context) {
 	}
 }
 
-func HandleComment(c * webapp.Context) {
+func HandleComment(c *webapp.Context) {
 	if c.Request.Method == "POST" {
 		IP := strings.Split(c.Request.RemoteAddr, ":")[0]
-		comment := new (Comment)
+		comment := new(Comment)
 		comment.Metadata.Name = UUID()
 		comment.Metadata.IP = IP
 		comment.Metadata.CreatedTime = time.Now().Unix()
@@ -174,7 +175,7 @@ func HandleComment(c * webapp.Context) {
 	}
 }
 
-func HandleFeed(c * webapp.Context, pathLevels []string) {
+func HandleFeed(c *webapp.Context, pathLevels []string) {
 	if len(pathLevels) < 2 {
 		c.Redirect("/feed/atom", http.StatusFound)
 		return
@@ -196,7 +197,7 @@ func HandleFeed(c * webapp.Context, pathLevels []string) {
 	}
 }
 
-func HandleWriter(c * webapp.Context, pathLevels []string) {
+func HandleWriter(c *webapp.Context, pathLevels []string) {
 	if ok := isAuthorized(c); !ok {
 		c.Redirect("/guard", http.StatusFound)
 		return
@@ -209,21 +210,21 @@ func HandleWriter(c * webapp.Context, pathLevels []string) {
 		}
 		if pathLevels[1] == "overview" {
 			pos, _ := strconv.Atoi(c.Request.FormValue("pos"))
-			if pos > TattooDB.GetArticleCount() - 1 {
+			if pos > TattooDB.GetArticleCount()-1 {
 				c.Redirect("/writer/overview", http.StatusFound)
 				return
 			}
 			err = RenderWriterOverview(c, pos)
 		} else if pathLevels[1] == "comments" {
 			pos, _ := strconv.Atoi(c.Request.FormValue("pos"))
-			if pos > TattooDB.GetCommentCount() - 1 {
+			if pos > TattooDB.GetCommentCount()-1 {
 				c.Redirect("/writer/comments", http.StatusFound)
 				return
 			}
 			err = RenderWriterComments(c, pos)
 		} else if pathLevels[1] == "edit" {
-			var article *Article = new (Article)
-			var meta *ArticleMetadata = new (ArticleMetadata)
+			var article *Article = new(Article)
+			var meta *ArticleMetadata = new(ArticleMetadata)
 			var source []byte
 			if len(pathLevels) >= 3 {
 				name := strings.ToLower(url.QueryEscape(pathLevels[2]))
@@ -280,17 +281,17 @@ func HandleWriter(c * webapp.Context, pathLevels []string) {
 	}
 }
 
-func HandleUpdateArticle(c * webapp.Context) {
+func HandleUpdateArticle(c *webapp.Context) {
 	isNew := false
 	isRename := false
-	origName := strings.Trim(c.Request.FormValue("orig_name")," ")
+	origName := strings.Trim(c.Request.FormValue("orig_name"), " ")
 	var err error
 	var meta *ArticleMetadata
-	article := new (Article)
-	article.Metadata.Title = strings.Trim(c.Request.FormValue("title")," ")
-	article.Metadata.Name = strings.ToLower(strings.Trim(c.Request.FormValue("url")," "))
-	article.Metadata.FeaturedPicURL = strings.Trim(c.Request.FormValue("fpic")," ")
-	article.Metadata.Summary = strings.Trim(c.Request.FormValue("sum")," ")
+	article := new(Article)
+	article.Metadata.Title = strings.Trim(c.Request.FormValue("title"), " ")
+	article.Metadata.Name = strings.ToLower(strings.Trim(c.Request.FormValue("url"), " "))
+	article.Metadata.FeaturedPicURL = strings.Trim(c.Request.FormValue("fpic"), " ")
+	article.Metadata.Summary = strings.Trim(c.Request.FormValue("sum"), " ")
 	article.Metadata.Author = GetConfig().AuthorName
 	article.Metadata.ModifiedTime = time.Now().Unix()
 	article.Text = template.HTML(c.Request.FormValue("text"))
@@ -317,7 +318,7 @@ func HandleUpdateArticle(c * webapp.Context) {
 		return
 	}
 	// verify the form data
-	if len(article.Metadata.Title) == 0||len(article.Metadata.Name) == 0{
+	if len(article.Metadata.Title) == 0 || len(article.Metadata.Name) == 0 {
 		c.Redirect("/writer/edit", http.StatusFound)
 		return
 	}
@@ -356,11 +357,11 @@ func HandleUpdateArticle(c * webapp.Context) {
 	return
 }
 
-func HandleUpdateSystemSettings(c * webapp.Context) {
+func HandleUpdateSystemSettings(c *webapp.Context) {
 }
 
-func GetLastCommentMetadata(c * webapp.Context) (meta * CommentMetadata) {
-	meta = new (CommentMetadata)
+func GetLastCommentMetadata(c *webapp.Context) (meta *CommentMetadata) {
+	meta = new(CommentMetadata)
 	for _, cookie := range c.Request.Cookies() {
 		switch cookie.Name {
 		case "author":
@@ -374,7 +375,7 @@ func GetLastCommentMetadata(c * webapp.Context) (meta * CommentMetadata) {
 	return meta
 }
 
-func HandleSinglePage(c * webapp.Context, pagename string) {
+func HandleSinglePage(c *webapp.Context, pagename string) {
 	if TattooDB.Has(pagename) {
 		lastMeta := GetLastCommentMetadata(c)
 		err := RenderSinglePage(c, pagename, lastMeta)
@@ -390,4 +391,3 @@ func HandleSinglePage(c * webapp.Context, pagename string) {
 		Render404page(c, NOT_FOUND_MESSAGE)
 	}
 }
-
