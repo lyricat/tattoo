@@ -53,6 +53,20 @@ func (meta *ArticleMetadata) TagRawList() string {
 	return strings.Join(meta.Tags, ", ")
 }
 
+func (meta *ArticleMetadata) HasFeaturedPic() bool {
+	if len(meta.FeaturedPicURL) == 0 {
+		return false
+	}
+	return true
+}
+
+func (meta *ArticleMetadata) HasSummary() bool {
+	if len(meta.Summary) == 0 {
+		return false
+	}
+	return true
+}
+
 type CommentIndexItem struct {
 	Name         string
 	CommentNames []string
