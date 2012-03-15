@@ -603,7 +603,7 @@ func (s *TattooStorage) DeleteComments(name string) {
 	var lst []interface{}
 	lst_buff, err := s.CommentIndexDB.GetJSON(name)
 	if err != nil {
-		println("load comment index failed", err)
+		log.Printf("load comment index failed (%v)!\n", err)
 	} else {
 		lst = lst_buff.([]interface{})
 	}
@@ -624,7 +624,7 @@ func (s *TattooStorage) RenameComments(origName, newName string) {
 	var lst_buff interface{}
 	lst_buff, err := s.CommentIndexDB.GetJSON(origName)
 	if err != nil {
-		println("load comment index failed", err)
+		log.Printf("load comment index failed (%v)!\n", err)
 	} else {
 		lst = lst_buff.([]interface{})
 	}
@@ -713,7 +713,7 @@ func (s *TattooStorage) GetComments(name string) []*Comment {
 	var text []byte
 	lst_buff, err = s.CommentIndexDB.GetJSON(name)
 	if err != nil {
-		println("load comment index failed")
+		log.Printf("load comment index failed (%v)!\n", err)
 		return nil
 	}
 	lst = lst_buff.([]interface{})
@@ -738,7 +738,7 @@ func (s *TattooStorage) GetComments(name string) []*Comment {
 func (s *TattooStorage) GetArticleCommentCount(name string) int {
 	lst_buff, err := s.CommentIndexDB.GetJSON(name)
 	if err != nil {
-		println("load comment index failed")
+		log.Printf("load comment index failed (%v)!\n", err)
 		return 0
 	}
 	return len(lst_buff.([]interface{}))

@@ -50,6 +50,12 @@ const (
     FILE_STORAGE_MODE_MULIPLE = 1
 )
 
+const (
+	ERROR_UNKNOWN			= "Unknown Error"
+	ERROR_KEY_NOT_EXISTS	= "Key doesn't exists"
+	ERROR_IMPERMEABLE_KEY	= "Impereable Key"
+)
+
 func (fs *FileStorage) Init(path string, mode int) error {
     fs.Path = path
     fs.Mode = mode
@@ -98,14 +104,14 @@ func (fs *FileStorage) Master() {
 
 func (fs *FileStorage) Get(key string) ([]byte, error) {
     if key == "*" {
-        return nil, errors.New(ErrNotFound)
+        return nil, errors.New(ERROR_IMPERMEABLE_KEY)
     }
     fs.Stat.GetCount++
     if fs.Mode == FILE_STORAGE_MODE_SINGLE {
         if val, ok := fs.Index[key]; ok {
             return []byte(val), nil
         } else {
-            return nil, errors.New(ErrNotFound)
+            return nil, errors.New(ERROR_KEY_NOT_EXISTS)
         }
     } else if fs.Mode == FILE_STORAGE_MODE_MULIPLE {
         if _, ok := fs.Index[key]; ok {
@@ -117,10 +123,10 @@ func (fs *FileStorage) Get(key string) ([]byte, error) {
             }
             return value, nil
         } else {
-            return nil, errors.New(ErrNotFound)
+            return nil, errors.New(ERROR_KEY_NOT_EXISTS)
         }
     }
-    return nil, errors.New(ErrNotFound)
+    return nil, errors.New(ERROR_UNKNOWN)
 }
 
 func (fs *FileStorage) Has(key string) bool {
@@ -141,7 +147,9 @@ func (fs *FileStorage) Set(key string, value []byte) error {
     } else if fs.Mode == FILE_STORAGE_MODE_MULIPLE {
         valueFilePath := path.Join(fs.Path, key)
         fs.Index[key] = valueFilePath
-        ioutil.WriteFile(valueFilePath, value, 0644)
+		if err := ioutil.WriteFile(valueFilePath, value, 0644); err != nil {
+			return err;
+		}
     }
     return nil
 }
@@ -157,6 +165,9 @@ func (fs *FileStorage) SetString(key string, value string) error {
 	return fs.Set(key, []byte(value))
 }
 
+// Gets string form storage assigned with specified key, coverts it to json object
+// and returns.
+// if this key doesn't exists or failed to parse json, return nil, err
 func (fs *FileStorage) GetJSON(key string) (interface{}, error) {
     var jsobj interface{}
     str, err := fs.Get(key)
@@ -202,7 +213,9 @@ func (fs *FileStorage) SaveIndex() error {
         return err
     }
     fs.Stat.SaveIndexCount++
-    ioutil.WriteFile(indexPath, buff, 0644)
+	if err := ioutil.WriteFile(indexPath, buff, 0644); err != nil {
+		return err
+	}
     return nil
 }
 
