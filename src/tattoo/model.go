@@ -4,83 +4,82 @@ import (
 	"html/template"
 	"strings"
 	"time"
-	)
+)
 
 type ArticleMetadata struct {
-    Name string
-    Author string
-    Title string
-	Tags []string
+	Name           string
+	Author         string
+	Title          string
+	Tags           []string
 	FeaturedPicURL string
-	Summary string
-    CreatedTime int64
-    ModifiedTime int64
-    Hits int64
+	Summary        string
+	CreatedTime    int64
+	ModifiedTime   int64
+	Hits           int64
 }
 
 type Article struct {
-    Metadata ArticleMetadata
-    Text template.HTML
-    Comments []*Comment
+	Metadata ArticleMetadata
+	Text     template.HTML
+	Comments []*Comment
 }
 
-func (meta * ArticleMetadata) CreatedTimeRFC3339() string {
-    return TimeRFC3339(meta.CreatedTime)
+func (meta *ArticleMetadata) CreatedTimeRFC3339() string {
+	return TimeRFC3339(meta.CreatedTime)
 }
 
-func (meta * ArticleMetadata) ModifiedTimeRFC3339() string {
-    return TimeRFC3339(meta.ModifiedTime)
+func (meta *ArticleMetadata) ModifiedTimeRFC3339() string {
+	return TimeRFC3339(meta.ModifiedTime)
 }
 
-func (meta * ArticleMetadata) CreatedTimeHumanReading() string {
-    return TimeHumanReading(meta.CreatedTime)
+func (meta *ArticleMetadata) CreatedTimeHumanReading() string {
+	return TimeHumanReading(meta.CreatedTime)
 }
 
-func (meta * ArticleMetadata) GetCreatedTime() time.Time {
-    t := time.Unix(meta.CreatedTime, 0).Local()
-    return t
+func (meta *ArticleMetadata) GetCreatedTime() time.Time {
+	t := time.Unix(meta.CreatedTime, 0).Local()
+	return t
 }
 
-func (meta * ArticleMetadata) GetShortMonth(t1 time.Time) string {
+func (meta *ArticleMetadata) GetShortMonth(t1 time.Time) string {
 	return t1.Month().String()[0:3]
 }
 
-func (meta * ArticleMetadata) ModifiedTimeHumanReading() string {
-    return TimeHumanReading(meta.ModifiedTime)
+func (meta *ArticleMetadata) ModifiedTimeHumanReading() string {
+	return TimeHumanReading(meta.ModifiedTime)
 }
 
-func (meta * ArticleMetadata) TagRawList() string {
-    return strings.Join(meta.Tags, ", ")
+func (meta *ArticleMetadata) TagRawList() string {
+	return strings.Join(meta.Tags, ", ")
 }
 
 type CommentIndexItem struct {
-    Name string
-    CommentNames []string
+	Name         string
+	CommentNames []string
 }
 
 type CommentMetadata struct {
-    Name string;
-    Author string;
-    ArticleName string;
-    UAgent string
-    URL string;
-    IP string;
-    Email string;
-    EmailHash string;
-    CreatedTime int64
+	Name        string
+	Author      string
+	ArticleName string
+	UAgent      string
+	URL         string
+	IP          string
+	Email       string
+	EmailHash   string
+	CreatedTime int64
 }
 
-func (meta * CommentMetadata) CreatedTimeHumanReading() string {
-    return TimeHumanReading(meta.CreatedTime)
+func (meta *CommentMetadata) CreatedTimeHumanReading() string {
+	return TimeHumanReading(meta.CreatedTime)
 }
 
 type Comment struct {
-    Metadata CommentMetadata;
-    Text template.HTML;
+	Metadata CommentMetadata
+	Text     template.HTML
 }
 
 type TagWrapper struct {
-	Name string
+	Name  string
 	Count int
 }
-

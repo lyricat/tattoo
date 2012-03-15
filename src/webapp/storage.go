@@ -1,54 +1,54 @@
 package webapp
+
 import (
+    "encoding/json"
+	"errors"
+    "fmt"
+    "io/ioutil"
     "os"
     "path"
     "path/filepath"
-    "encoding/json"
-    "io/ioutil"
-    "fmt"
     "time"
-	"errors"
-    )
+)
 
 const (
     OP_SAVE = 0
-    )
+)
 
 type Storage interface {
-    Get(string)string
-    Set(string)string
-    Delete(string)string
+    Get(string) string
+    Set(string) string
+    Delete(string) string
 }
 
 type StorageStat struct {
-    GetCount int64
-    SetCount int64
-    DeleteCount int64
-    HasCount int64
+    GetCount       int64
+    SetCount       int64
+    DeleteCount    int64
+    HasCount       int64
     SaveIndexCount int64
 }
 
-
 type StorageCmdItem struct {
-    Op int
+    Op   int
     Arg1 interface{}
 }
 
 type FileStorage struct {
-    Path string;
-    Mode int;
+    Path  string
+    Mode  int
     Index map[string]string
-    Stat StorageStat
-// @TODO
+    Stat  StorageStat
+    // @TODO
     GetChan chan string
     SetChan chan string
     CmdChan chan *StorageCmdItem
 }
 
 const (
-    FILE_STORAGE_MODE_SINGLE = 0
+    FILE_STORAGE_MODE_SINGLE  = 0
     FILE_STORAGE_MODE_MULIPLE = 1
-    )
+)
 
 func (fs *FileStorage) Init(path string, mode int) error {
     fs.Path = path
@@ -68,9 +68,9 @@ func (fs *FileStorage) Init(path string, mode int) error {
     }
     fs.LoadIndex()
     go fs.Master()
-    go func () {
+    go func() {
         for {
-            time.Sleep(120*1e9)
+            time.Sleep(120 * 1e9)
             cmd := new(StorageCmdItem)
             cmd.Op = OP_SAVE
             fs.CmdChan <- cmd
@@ -82,14 +82,14 @@ func (fs *FileStorage) Init(path string, mode int) error {
 func (fs *FileStorage) Master() {
     for {
         select {
-        case cmd:= <-fs.CmdChan:
+        case cmd := <-fs.CmdChan:
             if cmd.Op == OP_SAVE {
                 fs.SaveIndex()
             }
-        case v:= <-fs.GetChan:
+        case v := <-fs.GetChan:
             // @TODO get value
             print(v)
-        case v:= <-fs.SetChan:
+        case v := <-fs.SetChan:
             // @TODO set value
             print(v)
         }
@@ -100,7 +100,7 @@ func (fs *FileStorage) Get(key string) ([]byte, error) {
     if key == "*" {
         return nil, errors.New(ErrNotFound)
     }
-    fs.Stat.GetCount ++
+    fs.Stat.GetCount++
     if fs.Mode == FILE_STORAGE_MODE_SINGLE {
         if val, ok := fs.Index[key]; ok {
             return []byte(val), nil
@@ -127,7 +127,7 @@ func (fs *FileStorage) Has(key string) bool {
     if key == "*" {
         return false
     }
-    fs.Stat.HasCount ++
+    fs.Stat.HasCount++
     if _, ok := fs.Index[key]; ok {
         return true
     }
@@ -135,7 +135,7 @@ func (fs *FileStorage) Has(key string) bool {
 }
 
 func (fs *FileStorage) Set(key string, value []byte) error {
-    fs.Stat.SetCount ++
+    fs.Stat.SetCount++
     if fs.Mode == FILE_STORAGE_MODE_SINGLE {
         fs.Index[key] = string(value)
     } else if fs.Mode == FILE_STORAGE_MODE_MULIPLE {
@@ -165,7 +165,7 @@ func (fs *FileStorage) GetJSON(key string) (interface{}, error) {
     }
 	if err := json.Unmarshal(str, &jsobj); err != nil {
 		fmt.Printf("FileStorage.GetJSON, Unmarshal json failed (%v):%s\n", key, err)
-			return nil, err
+        return nil, err
 	}
     return jsobj, nil
 }
@@ -180,7 +180,7 @@ func (fs *FileStorage) SetJSON(key string, value interface{}) error {
 }
 
 func (fs *FileStorage) Delete(key string) {
-    fs.Stat.DeleteCount ++
+    fs.Stat.DeleteCount++
     if fs.Mode == FILE_STORAGE_MODE_SINGLE {
         delete(fs.Index, key)
     } else if fs.Mode == FILE_STORAGE_MODE_MULIPLE {
@@ -201,7 +201,7 @@ func (fs *FileStorage) SaveIndex() error {
         fmt.Printf("FileStorage.SaveIndex, Marshal json failed (%v):%s\n", indexPath, err)
         return err
     }
-    fs.Stat.SaveIndexCount ++
+    fs.Stat.SaveIndexCount++
     ioutil.WriteFile(indexPath, buff, 0644)
     return nil
 }
@@ -222,12 +222,10 @@ func (fs *FileStorage) LoadIndex() error {
 
 func (fs *FileStorage) getIndexFilePath() string {
 	var indexPath string
-    if (fs.Mode == FILE_STORAGE_MODE_SINGLE) {
+    if fs.Mode == FILE_STORAGE_MODE_SINGLE {
         indexPath = fs.Path
-    } else if (fs.Mode == FILE_STORAGE_MODE_MULIPLE) {
+    } else if fs.Mode == FILE_STORAGE_MODE_MULIPLE {
         indexPath = path.Join(fs.Path, "index.json")
     }
     return indexPath
 }
-
-

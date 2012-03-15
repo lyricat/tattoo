@@ -138,6 +138,7 @@ func HandleComment(c *webapp.Context) {
 		comment.Text = template.HTML(strings.Trim(c.Request.FormValue("text"), " "))
 
 		var cookie *http.Cookie
+
 		expires := time.Date(2099, time.November, 10, 23, 0, 0, 0, time.UTC)
 		cookie = new(http.Cookie)
 		cookie.Path = "/"
