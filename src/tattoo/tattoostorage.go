@@ -2,7 +2,7 @@ package main
 
 import (
 	"errors"
-	"github.com/shellex/blackfriday"
+	"github.com/russross/blackfriday"
 	"html/template"
 	"log"
 	"sort"

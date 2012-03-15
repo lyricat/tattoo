@@ -78,13 +78,13 @@
 					</table>
 					</details>
 					{{end}}
+					<textarea id="text_box" name="text" style="display:none">{{ printf "%s" .Vars.Article.Text}}</textarea>
 				</form>
 			</div>
 
 		</div>
 		<div id="container">
 			<div class="left_pane pane">
-				<textarea id="text_box" name="text" style="display:none">{{ printf "%s" .Vars.Article.Text}}</textarea>
 				<div id="input_pane" placeholder="type some markdown code or drag & drop a .md file here">
 				</div>
 			</div>

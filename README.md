@@ -13,10 +13,9 @@
 		
 ### build & install
  
-use follow command to install blackfriday from my repo
+use follow command to install blackfriday from russross's repo
 
-	go get github.com/shellex/blackfriday
-	go install github.com/shellex/blackfriday
+	go get github.com/russross/blackfriday
 
 build and install tattoo
 
