@@ -24,6 +24,11 @@
 					}, function () {
 							$(this).children('.bubble').hide();
 					})
+
+					$('.v_nav').click(function () {
+						var icon = $(this).children('.icon');
+						icon.addClass('loading');
+					});
 			});
 	</script>
 </head>
