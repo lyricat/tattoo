@@ -465,17 +465,33 @@ input[type="text"]:focus, textarea:focus {
 	display: block;
 	background: transparent url(../image/body_dark_bg.png);
 	outline: none;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
 	color: #6D6E71;
 	font-size: 20px;
 	font-weight: bold;
+	display: block;
+	height: 64px;
+	width: 64px;
+	text-indent: -9999px;
+}
+.v_nav .icon {
+	background: transparent url(../image/go_bg.png) no-repeat 0 0;
+	height: 64px;
+	width: 64px;
+	display: block;
+	content: " ";
+	float: left;
 }
 .v_nav:hover {
 	color: #A0410D
 }
-
+@-webkit-keyframes ani_go_loading {
+	from {
+		-webkit-transform: rotate(0deg);
+	}
+	to { 
+		-webkit-transform: rotate(360deg);
+	}
+}
 #scroll_to_top {
 	width: 54px;
 	height: 54px;
@@ -487,20 +503,38 @@ input[type="text"]:focus, textarea:focus {
 #prev {
 	top: 50%;
 	left: 0;
-	padding: 10px 20px;
+	padding: 10px 10px 10px 20px;
 	margin-top: -100px;
-	border-bottom-left-radius: 0;
-	border-top-left-radius: 0;
+	border-bottom-right-radius: 42px;
+	border-top-right-radius: 42px;
+}
+#prev .icon{
+	background-position: 0 0;
+}
+#prev:hover .icon{
+	background-position: 0 -64px;
 }
 #next {
 	top: 50%;
 	right: 0;
-	padding: 10px 20px;
+	padding: 10px 20px 10px 10px;
 	margin-top: -100px;
-	border-bottom-right-radius: 0;
-	border-top-right-radius: 0;
+	border-bottom-left-radius: 42px;
+	border-top-left-radius: 42px;
 }
-
+#next .icon{
+	background-position: 0 -128px;
+}
+#next:hover .icon{
+	background-position: 0 -192px;
+}
+#next .loading, #prev .loading {
+	background-position: 0 -256px !important; 
+	-webkit-animation-name: ani_go_loading; 
+	-webkit-animation-duration: 1s; 
+	-webkit-animation-iteration-count:  infinite;
+	-webkit-animation-timing-function: linear;
+}
 /* Footer */
 
 #footer_wrapper {

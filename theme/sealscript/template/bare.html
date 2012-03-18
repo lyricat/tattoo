@@ -38,27 +38,39 @@
     {{ $next_name := $.Fn.GetNextArticleName $cur_name }}
     {{ $prev_name := $.Fn.GetPrevArticleName $cur_name }}
     {{ if $next_name}}
-<a id="next" href="/{{$next_name}}" class="v_nav">Next</a>
+		<a id="next" href="/{{$next_name}}" class="v_nav">
+			<span class="icon">Next</span>
+		</a>
     {{ end}}
     {{ if $prev_name}}
-<a id="prev" href="/{{$prev_name}}" class="v_nav">Prev</a>
+		<a id="prev" href="/{{$prev_name}}" class="v_nav">
+			<span class="icon">Prev</span>
+		</a>
     {{ end }}
 {{ else }}
   {{ $cur_offset := .Vars.Offset }}
 	{{ if .Flags.HasTag }}
 		{{ $tag = .Vars.Tag }}
     {{ if not .Vars.AtBegin }} 
-<a id="prev" href="/t/{{$tag}}?pos={{ $.Fn.GetPrevTagTLPos $tag $cur_offset 10}}" class="v_nav">Prev</a>
+<a id="prev" href="/t/{{$tag}}?pos={{ $.Fn.GetPrevTagTLPos $tag $cur_offset 10}}" class="v_nav">
+			<span class="icon">Prev</span>
+</a>
     {{ end }}
     {{ if not .Vars.AtEnd}} 
-<a id="next" href="/t/{{$tag}}?pos={{ $.Fn.GetNextTagTLPos $tag $cur_offset 10}}" class="v_nav">Next</a>
+<a id="next" href="/t/{{$tag}}?pos={{ $.Fn.GetNextTagTLPos $tag $cur_offset 10}}" class="v_nav">
+			<span class="icon">Next</span>
+</a>
     {{ end }}
 	{{ else }}
     {{ if not .Vars.AtBegin }} 
-<a id="prev" href="/?pos={{ $.Fn.GetPrevTLPos $cur_offset 0}}" class="v_nav">Prev</a>
+<a id="prev" href="/?pos={{ $.Fn.GetPrevTLPos $cur_offset 0}}" class="v_nav">
+			<span class="icon">Prev</span>
+</a>
     {{ end }}
     {{ if not .Vars.AtEnd }} 
-<a id="next" href="/?pos={{ $.Fn.GetNextTLPos $cur_offset 0}}" class="v_nav">Next</a>
+<a id="next" href="/?pos={{ $.Fn.GetNextTLPos $cur_offset 0}}" class="v_nav">
+			<span class="icon">Next</span>
+</a>
     {{ end }}
 	{{ end }}
 {{ end }}
