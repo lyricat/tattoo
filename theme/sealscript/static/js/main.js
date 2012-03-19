@@ -6,13 +6,11 @@ function loadpage(hash) {
     } else if (hash.indexOf('#comment_') == 0) { // comment
     
     } else { // single
-        console.log(hash)
         _loadpage('/' + hash.substring(1));
     }
 }
 
 function _loadpage (url, callback) {
-    console.log('load page ', url)
     $.ajax({
         url: url,
     success: function (data) {
@@ -37,26 +35,29 @@ function _loadpage (url, callback) {
                 }
             }
         }
-        if (next_node != null 
+        if (next_node != null
             && next_node.style.display == 'block') {
-                $('#next').attr('href', next_node.href);
-                $('#next').attr('hash', next_node.hash);
-                $('#next').show();
-            } else {
-                $('#next').hide();
-            }
+            $('#next').attr('href', next_node.href);
+            $('#next').attr('hash', next_node.hash);
+            $('#next').show();
+        } else {
+            $('#next').hide();
+        }
         if (prev_node != null
             && prev_node.style.display == 'block') {
-                $('#prev').attr('href', prev_node.href);
-                $('#prev').attr('hash', prev_node.hash);
-                $('#prev').show();
-            } else {
-                $('#prev').hide();
-            }
+            $('#prev').attr('href', prev_node.href);
+            $('#prev').attr('hash', prev_node.hash);
+            $('#prev').show();
+        } else {
+            $('#prev').hide();
+        }
+            
         if (content_node != null) {
             $('#content').html(content_node.innerHTML)
         }
-        window.location.hash = next_node.getAttribute('hash')
+        if (next_node != null) {
+            window.location.hash = next_node.getAttribute('hash')
+        }
         if (callback != undefined) {
             callback(data)
         }
