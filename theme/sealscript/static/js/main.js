@@ -53,6 +53,7 @@ function _loadpage (url, callback) {
         }
             
         if (content_node != null) {
+            $('#content').empty();
             $('#content').html(content_node.innerHTML)
         }
         if (next_node != null) {
