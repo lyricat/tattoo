@@ -66,26 +66,30 @@ function _loadpage (url, callback) {
     error: callback
     });
 }
-
+var dynamic = false;
 $(document).ready(function () {
     $('#recent_comments li').hover(function () {
         $(this).children('.bubble').show();
     }, function () {
         $(this).children('.bubble').hide();
     });
-    var hash = window.location.hash;
-    if (hash.length != 0) {
-        loadpage(hash);
+    if (dynamic) {
+        var hash = window.location.hash;
+        if (hash.length != 0) {
+            loadpage(hash);
+        }
     }
 
     $('.v_nav').click(function () {
         var icon = $(this).children('.icon');
         icon.addClass('loading');
-        var url = $(this).attr('href');
-        window.location.hash = $(this).attr('hash');
-        _loadpage(url, function () {
-            icon.removeClass('loading');
-        });
-        return false;
+        if (dynamic) {
+            var url = $(this).attr('href');
+            window.location.hash = $(this).attr('hash');
+            _loadpage(url, function () {
+                icon.removeClass('loading');
+            });
+            return false;
+        }
     })
 });
