@@ -135,6 +135,9 @@ func HandleComment(c *webapp.Context) {
 		comment.Metadata.UAgent = strings.Trim(c.Request.UserAgent(), " ")
 		comment.Metadata.Email = strings.Trim(c.Request.FormValue("email"), " ")
 		comment.Metadata.URL = strings.Trim(c.Request.FormValue("url"), " ")
+		if strings.Index(comment.Metadata.URL, "http://") == -1 && strings.Index(comment.Metadata.URL, "https://") == -1 {
+			comment.Metadata.URL = "http://" + comment.Metadata.URL;
+		}
 		comment.Text = template.HTML(strings.Trim(c.Request.FormValue("text"), " "))
 
 		var cookie *http.Cookie
