@@ -143,7 +143,7 @@ func (app *App) SetHandler(url string, handleFunc func(*Context)) {
 }
 
 func (app *App) SetStaticPath(url string, path string) {
-	http.Handle(url, http.StripPrefix(url[:len(url)-1], http.FileServer(http.Dir(path))))
+	http.Handle(url + "/", http.StripPrefix(url, http.FileServer(http.Dir(path))))
 	return
 }
 

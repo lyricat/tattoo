@@ -14,6 +14,7 @@ type T_FLAGS struct {
 	WriterOverview bool
 	WriterTags     bool
 	WriterComments bool
+	WriterSettings bool
 	WriterEditor   bool
 }
 
@@ -22,7 +23,6 @@ type T_DATA struct {
 	Flags       T_FLAGS
 	SiteConfig  Config
 	ContextInfo webapp.ContextInfo
-	SiteVars    map[string]string
 	Vars        interface{}
 }
 
@@ -33,7 +33,6 @@ func MakeData(ctx *webapp.Context, vars interface{}) T_DATA {
 	data := T_DATA{
 		SiteConfig:  *config,
 		ContextInfo: ctx.Info,
-		SiteVars:    TattooDB.VarDB.Index,
 		Vars:        vars,
 	}
 	return data

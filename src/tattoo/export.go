@@ -140,3 +140,23 @@ func (e *Export) GetArticleTags(name string) []string {
 func (e *Export) GetTagList(count int) []TagWrapper {
 	return TattooDB.GetTags()
 }
+
+func (e * Export) GetRootURL() string {
+	ret, _ := TattooDB.GetVar("RootURL")
+	return ret
+}
+
+func (e * Export) GetThemeURL() string {
+	ret, _ := TattooDB.GetVar("ThemeURL")
+	return ret
+}
+
+func (e * Export) GetThemeStaticURL() string {
+	ret, _ := TattooDB.GetVar("ThemeStaticURL")
+	return ret
+}
+
+func (e * Export) GetSystemStaticURL() string {
+	ret, _ := TattooDB.GetVar("SystemStaticURL")
+	return ret
+}

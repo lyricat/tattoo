@@ -73,8 +73,48 @@ input[type="text"]:focus, textarea:focus {
 	-moz-box-shadow: inset #ccc 0 0 5px;
 	box-shadow: inset #ccc 0 0 5px;
 }
-
+.error {
+	background: 
+	#F8E3A4;
+	font-size: 14px;
+	border: 1px solid 
+	#EE3434;
+	margin: 0 auto;
+	padding: 8px 20px;
+	display: inline-block;
+}
 #container {
 	margin: 0 auto;
 	width: 960px;
+}
+table {
+	width: 100%;
+}
+#settings_area {
+	
+}
+#settings_area .config_key {
+	float: left;
+	width: 200px;
+	text-align: right;
+	padding-top: 5px;
+	font-size: 16px;
+}
+#settings_area .settings_block > div {
+	margin: 10px 0;
+} 
+#settings_area .settings_block > div > * {
+}
+#settings_area .config_val {
+	margin-left: 230px;
+	width: 400px;
+}
+#settings_area .config_val input {
+	width: 100%;
+}
+#settings_area .desc {
+	font-size: 11px;
+	color: #999;
+	margin: 5px 0;
+	padding-left: 5px;
 }

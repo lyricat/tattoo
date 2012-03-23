@@ -21,12 +21,12 @@ func isAuthorized(c *webapp.Context) bool {
 	}
 	return false
 }
-
+// Root Handler.
 func HandleRoot(c *webapp.Context) {
 	c.Info.UseGZip = strings.Index(c.Request.Header.Get("Accept-Encoding"), "gzip") > -1
 	c.Info.StartTime = time.Now()
-	urlPath := c.Request.URL.Path
 
+	urlPath := c.Request.URL.Path
 	pathLevels := strings.Split(strings.Trim(urlPath, "/"), "/")
 	if urlPath == "/" {
 		// home page
@@ -226,6 +226,8 @@ func HandleWriter(c *webapp.Context, pathLevels []string) {
 				return
 			}
 			err = RenderWriterComments(c, pos)
+		} else if pathLevels[1] == "settings" {
+			err = RenderWriterSettings(c, "")
 		} else if pathLevels[1] == "edit" {
 			var article *Article = new(Article)
 			var meta *ArticleMetadata = new(ArticleMetadata)
@@ -362,6 +364,46 @@ func HandleUpdateArticle(c *webapp.Context) {
 }
 
 func HandleUpdateSystemSettings(c *webapp.Context) {
+	portStr := strings.Trim(c.Request.FormValue("port"), " ")
+	certificate := strings.Trim(c.Request.FormValue("certificate"), " ")
+	sitebase := strings.Trim(c.Request.FormValue("sitebase"), " ")
+	siteurl := strings.Trim(c.Request.FormValue("siteurl"), " ")
+	sitetitle := strings.Trim(c.Request.FormValue("sitetitle"), " ")
+	sitesubtitle := strings.Trim(c.Request.FormValue("sitesubtitle"), " ")
+	path := strings.Trim(c.Request.FormValue("path"), " ")
+	author := strings.Trim(c.Request.FormValue("author"), " ")
+	timelinecountStr := strings.Trim(c.Request.FormValue("timelinecount"), " ")
+	theme := strings.Trim(c.Request.FormValue("theme"), " ")
+	// verify
+	port, err := strconv.Atoi(portStr)
+	if err != nil {
+		RenderWriterSettings(c, "Port should be a positive integer!")
+		return
+	}
+	timelinecount, err := strconv.Atoi(timelinecountStr)
+	if err != nil {
+		RenderWriterSettings(c, "Timeline Count should be a positive integer!")
+		return
+	}
+	if err := LoadTheme(c.Application, theme); err != nil {
+		RenderWriterSettings(c, fmt.Sprintf("Failed to load theme '%v': %v", theme, err))
+		return
+	}
+	var newConfig Config
+	newConfig.Port          = port
+	newConfig.Certificate   = certificate
+	newConfig.SiteBase      = sitebase
+	newConfig.SiteURL       = siteurl
+	newConfig.SiteTitle     = sitetitle
+	newConfig.SiteSubTitle  = sitesubtitle
+	newConfig.Path		    = path
+	newConfig.AuthorName    = author
+	newConfig.TimelineCount = timelinecount
+	newConfig.ThemeName     = theme
+	cfg := GetConfig()
+	cfg.Update(&newConfig)
+	cfg.Save()
+	c.Redirect("/writer/settings", http.StatusFound)
 }
 
 func GetLastCommentMetadata(c *webapp.Context) (meta *CommentMetadata) {

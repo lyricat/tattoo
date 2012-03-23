@@ -11,13 +11,15 @@ import (
 const CONFIG_NAME = "settings.json"
 
 type Config struct {
+	// sys config
 	Port          int
 	Certificate   string
+	Path	      string
 	SiteBase      string
 	SiteURL       string
+	// site config
 	SiteTitle     string
 	SiteSubTitle  string
-	StaticURL     string
 	AuthorName    string
 	TimelineCount int
 	ThemeName     string
@@ -34,7 +36,7 @@ func init() {
 	config.SiteBase = "localhost"
 	config.SiteURL = "http://localhost:8888"
 	config.SiteTitle = "TATTOO!"
-	config.StaticURL = config.SiteURL + "/static"
+	config.Path = "/"
 	config.AuthorName = "root"
 	config.TimelineCount = 3
 	config.ThemeName = "sealscript"
@@ -86,8 +88,8 @@ func (config *Config) Save() error {
 	return nil
 }
 
-func (config *Config) Modify(newcfg *Config) bool {
-	config.Port = newcfg.Port
+func (config *Config) Update(newcfg *Config) bool {
+	*config = *newcfg
 	return true
 }
 

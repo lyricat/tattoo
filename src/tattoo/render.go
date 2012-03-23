@@ -24,6 +24,7 @@ func LoadSystemTemplates() error {
 		"sys/template/nav.html",
 		"sys/template/tags.html",
 		"sys/template/comments.html",
+		"sys/template/settings.html",
 		"sys/template/overview.html",
 		"sys/template/content.html")
 	if err != nil {
@@ -204,6 +205,11 @@ func Render404page(ctx *webapp.Context, msg string) error {
 	return nil
 }
 
-func RenderWriterSettings(ctx *webapp.Context) (string, error) {
-	return "", nil
+func RenderWriterSettings(ctx *webapp.Context, msg string) error {
+	vars := make(map[string]interface{})
+	vars["Message"] = msg
+	data := MakeData(ctx, vars)
+	data.Flags.WriterSettings = true
+	err := ctx.Execute(writerTPL, &data)
+	return err
 }

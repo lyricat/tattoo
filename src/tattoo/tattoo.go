@@ -14,12 +14,17 @@ var startUpTime int64
 
 var useFCGI = flag.Bool("fcgi", false, "Use FastCGI")
 
-func LoadTheme(app *webapp.App, themeName string) {
-	rootPath, _ := os.Getwd()
+func LoadTheme(app *webapp.App, themeName string) error {
+	cfg := GetConfig()
 	app.Log("Use Theme", themeName)
-	app.SetStaticPath("/static/", path.Join(rootPath, "theme", themeName, "static"))
-	LoadThemeTemplates(themeName)
-	return
+	if err := LoadThemeTemplates(themeName); err != nil {
+		return err
+	}
+	themeURL := path.Join(cfg.Path, "theme", themeName)
+	themeStaticURL := path.Join(cfg.Path, "theme", themeName, "static")
+	TattooDB.SetVar("ThemeURL", themeURL)
+	TattooDB.SetVar("ThemeStaticURL", themeStaticURL)
+	return nil
 }
 
 func main() {
@@ -28,22 +33,37 @@ func main() {
 		fmt.Println("Failed to load configure file")
 		return
 	}
+	cfg := GetConfig()
 	startUpTime = time.Now().Unix()
 	rootPath, _ := os.Getwd()
-	staticPath := path.Join(rootPath, "sys/static")
+	rootURL := path.Join(cfg.Path, "/")
+	systemStaticPath := path.Join(rootPath, "/sys/static")
+	systemStaticURL := path.Join(cfg.Path, "/sys/static")
+
+	themePath := path.Join(rootPath, "theme")
+	themeURL := path.Join(cfg.Path, "/theme")
 
 	app := webapp.App{}
 	app.Log("App Starts", "OK")
-	app.SetStaticPath("/sys/static/", staticPath)
-	app.SetHandler("/", HandleRoot)
+	app.SetStaticPath(systemStaticURL, systemStaticPath)
+	app.SetStaticPath(themeURL, themePath)
+	app.SetHandler(rootURL, HandleRoot)
 
 	// Load DB
 	app.Log("Tattoo DB", "Load DB")
 	TattooDB.Load(&app)
 
+	TattooDB.SetVar("RootURL", rootURL)
+	TattooDB.SetVar("SystemStaticURL", systemStaticURL)
+
 	// load templates
-	LoadSystemTemplates()
-	LoadTheme(&app, GetConfig().ThemeName)
+	if err := LoadSystemTemplates(); err != nil {
+		app.Log("Error", fmt.Sprintf("Failed to load system templates: %v", err))
+		return
+	}
+	if err := LoadTheme(&app, GetConfig().ThemeName); err != nil {
+		app.Log("Error", fmt.Sprintf("Failed to load theme: %v", err))
+	}
 
 	// Start Server.
 	if *useFCGI {
