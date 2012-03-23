@@ -9,6 +9,9 @@
 	{{if .Flags.WriterTags}}
 		{{template "TAGS" .}}
 	{{end}}
+	{{if .Flags.WriterSettings}}
+		{{template "SETTINGS" .}}
+	{{end}}
 	</div>
 {{end}}
 

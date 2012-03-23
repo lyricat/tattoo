@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Sign in</title>
-	<link rel="stylesheet" href="/sys/static/css/writer_common.css" type="text/css" media="screen" /> 
+	<link rel="stylesheet" href="{{$.Fn.GetSystemStaticURL}}/css/writer_common.css" type="text/css" media="screen" /> 
 	<style type="text/css">
 		#content p {
 			margin: 10px 0px;
@@ -21,9 +21,9 @@
 			<p>
 				<input class="entry" style="width:220px" id="password_entry" name="certificate" 
 				placeholder="Password" type="password"/>
-				<a class="button" type="button" href="javascript:document.forms.guard.submit()"/>Sign </a>
+				<a class="button" type="button" href="javascript:document.forms.guard.submit()"/>Sign</a>
 			</p>
-			<div style="color:red;text-align:center;"></div>
+			<div style="color:red;text-align:center; margin: 20px 0;">{{.Vars.Error}}</div>
 		</form>
 		<p><a href="/" title="Back to blog">← Bring Me Back to Earch.</a></p>
 	</div>
