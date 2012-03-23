@@ -7,14 +7,14 @@
 	<form method="POST" action="">
 	<div class="system_settings settings_block">
 		<h2>System Settings</h2>
-		<div>
+		<div class="row">
 			<div class="config_key">Port</div>
 			<div class="config_val">
 				<p><input type="text" value="{{.Port}}" name="port" placeholder="8888"/></p>
 				<p class="desc">A TCP port where tattoo serves.</p>
 			</div>
 		</div>
-		<div>
+		<div class="row">
 			<div class="config_key">Certificate</div>
 			<div class="config_val">	
 				<p><input type="text" value="{{.Certificate}}"
@@ -22,21 +22,21 @@
 				<p class="desc">Password Hash.</p>
 			</div>
 		</div>
-		<div>
+		<div class="row">
 			<div class="config_key">Site Base</div>
 			<div class="config_val">
 				<p><input type="text" value="{{.SiteBase}}" name="sitebase" placeholder="localhost"/></p>
 				<p class="desc">Site base.</p>
 			</div>
 		</div>	
-		<div>
+		<div class="row">
 			<div class="config_key">Site URL</div>
 			<div class="config_val">
 				<p><input type="text" value="{{.SiteURL}}" name="siteurl" placeholder="http://localhost:8888"/></p>
 				<p class="desc">Site url.</p>
 			</div>
 		</div>
-		<div>
+		<div class="row">
 			<div class="config_key">Path</div>
 			<div class="config_val">
 				<p><input type="text" value="{{.Path}}" name="path" placeholder="/"/></p>
@@ -46,37 +46,35 @@
 	</div>
 	<div class="site_settings settings_block">
 		<h2>Site Settings</h2>
-		<div>
+		<div class="row">
 			<div class="config_key">Site Title</div>
 			<div class="config_val">
 				<p><input type="text" value="{{.SiteTitle}}" name="sitetitle" placeholder="TATTOO!"/></p>
 				<p class="desc">Title of your site</p>
 			</div>
 		</div>
-		<div>
+		<div class="row">
 			<div class="config_key">Site Sub Title</div>
-
 			<div class="config_val">
 				<p><input type="text" value="{{.SiteSubTitle}}" name="sitesubtitle" placeholder="live STRONG!"/></p>
 				<p class="desc">Sub title of your site</p>
-
 			</div>
 		</div>
-		<div>
+		<div class="row">
 			<div class="config_key">Author Name</div>
 			<div class="config_val">
 				<p><input type="text" value="{{.AuthorName}}" name="author" placeholder="Shellex"/></p>
 				<p class="desc">Your name.</p>
 			</div>
 		</div>
-		<div>
+		<div class="row">
 			<div class="config_key">Timeline Count</div>
 			<div class="config_val">
 				<p><input type="text" value="{{.TimelineCount}}" name="timelinecount" placeholder="3"/></p>
 				<p class="desc">How many articles per page.</p>
 			</div>
 		</div>
-		<div>
+		<div class="row">
 			<div class="config_key">Theme</div>
 			<div class="config_val">
 				<p><input type="text" value="{{.ThemeName}}" name="theme" placeholder="sealscript"/></p>
