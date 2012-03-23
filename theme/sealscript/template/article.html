@@ -40,9 +40,9 @@
 			<li id="comment_{{.Metadata.Name}}" class="comment">
 			<div class="avatar">
 				{{if .Metadata.EmailHash}}
-				<img src="http://www.gravatar.com/avatar/{{.Metadata.EmailHash}}?r=g&d=mm&s=48"/>
+				<img src="http://www.gravatar.com/avatar/{{.Metadata.EmailHash}}?r=g&d=mm&s=48" onerror="javascript:this.src='/static/image/default_avatar.png'"/>
 				{{else}}
-				<img src="http://www.gravatar.com/avatar/?r=g&d=mm&s=48"/>
+				<img src="/static/image/default_avatar.png"/>
 				{{end}}
 			</div>
 			<div class="comment_body">

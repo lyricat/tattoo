@@ -32,9 +32,9 @@
 			<li>
 				<a href="/{{$comm.Metadata.ArticleName}}/#comment_{{$comm.Metadata.Name}}" class="avatar recent_comment">
 					{{if $comm.Metadata.EmailHash}}
-					<img src="http://www.gravatar.com/avatar/{{$comm.Metadata.EmailHash}}?r=g&d=mm&s=32"/>
+					<img src="http://www.gravatar.com/avatar/{{$comm.Metadata.EmailHash}}?r=g&d=mm&s=32" onerror="javascript:this.src='/static/image/default_avatar.png'"/>
 					{{else}}
-					<img src="http://www.gravatar.com/avatar/?r=g&d=mm&s=32"/>
+					<img src="/static/image/default_avatar.png"/>
 					{{end}}
 				</a>
 				<div class="bubble"><div class="bubble_text">{{$comm.Text}}</div></div>
