@@ -13,11 +13,11 @@
 	</title>
 	<link href='http://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
 
-	<link rel="stylesheet" href="{{.SiteConfig.StaticURL}}/css/style.css" type="text/css" media="screen" /> 
-	<link rel="shortcut icon" type="image/png" href="{{.SiteConfig.StaticURL}}/image/favicon.ico" />    
+	<link rel="stylesheet" href="{{$.Fn.GetThemeStaticURL}}/css/style.css" type="text/css" media="screen" /> 
+	<link rel="shortcut icon" type="image/png" href="{{$.Fn.GetThemeStaticURL}}/image/favicon.ico" />    
 	<link href="/feed/atom" type="application/atom+xml" rel="alternate" title="Sitewide ATOM Feed" />    
-	<script type="text/javascript" src="{{.SiteConfig.StaticURL}}/js/jquery.js"></script>
-	<script type="text/javascript" src="{{.SiteConfig.StaticURL}}/js/main.js"></script>
+	<script type="text/javascript" src="{{$.Fn.GetThemeStaticURL}}/js/jquery.js"></script>
+	<script type="text/javascript" src="{{$.Fn.GetThemeStaticURL}}/js/main.js"></script>
 </head>
 <body>
 {{template "HEADER" .}}

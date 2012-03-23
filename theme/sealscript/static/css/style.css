@@ -17,7 +17,7 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 body {
 	line-height: 1;
 	background: #fff;
-	background: transparent url(/static/image/body_bg.png) repeat fixed;
+	background: transparent url(../image/body_bg.png) repeat fixed;
 	overflow: auto;
 	font: 14px 'Helvetica Neue',Helvetica,"Hiragino Sans GB","Hiragino Sans GB W3",Arial,sans-serif;
 	color: #494949;

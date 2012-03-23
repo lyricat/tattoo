@@ -23,18 +23,18 @@
 	</div>
 	<div id="header_inner">
 		<div id="social">
-			<a href="http://twitter.com/shellex" target="_blank" title="Follow Me @ Twitter"><img src="/static/image/ic16_twitter.png"></a>
-			<a href="http://github.com/shellex" target="_blank" title="Fork Me @ Github"><img src="/static/image/ic16_github.png"></a>
-			<a href="http://feeds.feedburner.com/shellex-cn" target="_blank" title="Subscribe My Blog"><img src="/static/image/ic16_rss.png"></a>
+			<a href="http://twitter.com/shellex" target="_blank" title="Follow Me @ Twitter"><img src="{{$.Fn.GetThemeStaticURL}}/image/ic16_twitter.png"></a>
+			<a href="http://github.com/shellex" target="_blank" title="Fork Me @ Github"><img src="{{$.Fn.GetThemeStaticURL}}/image/ic16_github.png"></a>
+			<a href="http://feeds.feedburner.com/shellex-cn" target="_blank" title="Subscribe My Blog"><img src="{{$.Fn.GetThemeStaticURL}}/image/ic16_rss.png"></a>
 		</div>
 		<ul id="recent_comments">
 			{{range $index, $comm := $.Fn.GetCommentTimeline 0 10 }}
 			<li>
 				<a href="/{{$comm.Metadata.ArticleName}}/#comment_{{$comm.Metadata.Name}}" class="avatar recent_comment">
 					{{if $comm.Metadata.EmailHash}}
-					<img src="http://www.gravatar.com/avatar/{{$comm.Metadata.EmailHash}}?r=g&d=mm&s=32" onerror="javascript:this.src='/static/image/default_avatar.png'"/>
+					<img src="http://www.gravatar.com/avatar/{{$comm.Metadata.EmailHash}}?r=g&d=mm&s=32" onerror="javascript:this.src='{{$.Fn.GetThemeStaticURL}}/image/default_avatar.png'"/>
 					{{else}}
-					<img src="/static/image/default_avatar.png"/>
+					<img src="{{$.Fn.GetThemeStaticURL}}/image/default_avatar.png"/>
 					{{end}}
 				</a>
 				<div class="bubble"><div class="bubble_text">{{$comm.Text}}</div></div>
