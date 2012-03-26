@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"webapp"
+	"github.com/salviati/tattoo/webapp"
 )
 
 const NOT_FOUND_MESSAGE = "Sorry, the page you were looking does not exist."
