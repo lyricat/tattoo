@@ -53,7 +53,7 @@
   {{ $cur_offset := .Vars.Offset }}
 	{{ if .Flags.HasTag }}
 		<!-- for tag page -->
-		{{ $tag = .Vars.Tag }}
+		{{ $tag := .Vars.Tag }}
 		<a id="prev" href="/t/{{$tag}}?pos={{ $.Fn.GetPrevTagTLPos $tag $cur_offset 10}}" class="v_nav" hash="t/{{$tag}}?pos={{$cur_offset}}"
 			{{ if .Vars.AtBegin }} 
 			style="display: none"

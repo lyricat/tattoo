@@ -6,7 +6,7 @@ import (
 	"html/template"
 	"net/http"
 	"strings"
-	"webapp"
+	"github.com/salviati/tattoo/webapp"
 )
 
 var mainTPL *template.Template

@@ -7,7 +7,7 @@ import (
 	"os"
 	"path"
 	"time"
-	"webapp"
+	"github.com/salviati/tattoo/webapp"
 )
 
 var startUpTime int64
