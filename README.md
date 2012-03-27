@@ -2,7 +2,7 @@
 
 ##Demo
 
- - My Blog: [shellex.info](http://shellex.info)
+ - shellex's blog: [shellex.info](http://shellex.info)
 
 ##Build & Install & Run
 
@@ -12,18 +12,13 @@
  - [blackfriday](https://github.com/shellex/blackfriday) that compatible with go weekly. ( orig: [russross](https://github.com/russross/blackfriday) )
 		
 ### build & install
- 
-use follow command to install blackfriday from russross's repo
 
-	go get github.com/russross/blackfriday
-
-build and install tattoo
-
-	./all.sh
+	go get github.com/salviati/tattoo
+	go install github.com/salviati/tattoo
 
 ### as a stand-alone server
 
-	./tattoo
+	cd to srv/ directory and run tattoo
 
 ### with Fast-CGI
 
@@ -67,5 +62,8 @@ and then, run
 
 	./tattoo -fcgi
 
+in srv/ directory.
 
+## Notes
 
+The default configuration is currently hardcoded in conf.go; the admin user is "root" and the password is "42".
