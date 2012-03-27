@@ -28,7 +28,7 @@ add the following code to your nginx site config file to make it work:
 
 	location /static/ {
 		expires 1d;
-		root YOUR_THEME_PATH;
+		root YOUR_BLOG_PATH;
 		add_header Cache-Control  must-revalidate;
 	}
 	location /sys/static/ {
