@@ -8,7 +8,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-	"webapp"
+	"github.com/salviati/tattoo/webapp"
 )
 
 type TattooStorage struct {
