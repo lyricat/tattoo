@@ -13,8 +13,8 @@
 		
 ### build & install
 
-	go get github.com/salviati/tattoo
-	go install github.com/salviati/tattoo
+	go get github.com/shellex/tattoo
+	go install github.com/shellex/tattoo
 
 ### as a stand-alone server
 

@@ -2,7 +2,7 @@ package main
 
 import (
 	"time"
-	"github.com/salviati/tattoo/webapp"
+	"github.com/shellex/tattoo/webapp"
 )
 
 type T_FLAGS struct {

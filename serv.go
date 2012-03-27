@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"github.com/salviati/tattoo/webapp"
+	"github.com/shellex/tattoo/webapp"
 )
 
 const NOT_FOUND_MESSAGE = "Sorry, the page you were looking does not exist."
