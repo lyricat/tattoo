@@ -9,6 +9,7 @@ import (
 type ArticleMetadata struct {
 	Name           string
 	Author         string
+	IsPage		   bool
 	Title          string
 	Tags           []string
 	FeaturedPicURL string

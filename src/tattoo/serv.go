@@ -30,13 +30,17 @@ func HandleRoot(c *webapp.Context) {
 	pathLevels := strings.Split(strings.Trim(urlPath, "/"), "/")
 	if urlPath == "/" {
 		// home page
-		HandleHome(c)
+		if HasTemplate("HOME") {
+			HandleHome(c)
+		} else {
+			HandleArticles(c)
+		}
 	} else {
 		if pathLevels[0] == "writer" {
 			// writer
 			HandleWriter(c, pathLevels)
 		} else if pathLevels[0] == "guard" {
-			// single page
+			// guard page
 			HandleGuard(c)
 		} else if pathLevels[0] == "comment" {
 			// comment
@@ -44,7 +48,7 @@ func HandleRoot(c *webapp.Context) {
 		} else if pathLevels[0] == "feed" {
 			// feed
 			HandleFeed(c, pathLevels)
-		} else if pathLevels[0] == "t" {
+		} else if pathLevels[0] == "tag" {
 			if len(pathLevels) >= 2 {
 				// tag
 				HandleTag(c, pathLevels[1])
@@ -53,18 +57,29 @@ func HandleRoot(c *webapp.Context) {
 			}
 		} else {
 			// single page
-			HandleSinglePage(c, strings.ToLower(url.QueryEscape(pathLevels[0])))
+			HandleSingle(c, strings.ToLower(url.QueryEscape(pathLevels[0])))
 		}
 	}
 }
 
 func HandleHome(c *webapp.Context) {
+	err := RenderHome(c)
+	if err != nil {
+		c.Error(fmt.Sprintf("%s: %s", webapp.ErrInternalServerError, err), http.StatusInternalServerError)
+	}
+}
+
+func HandleArticles(c *webapp.Context) {
 	pos, _ := strconv.Atoi(c.Request.FormValue("pos"))
 	if pos > TattooDB.GetArticleCount()-1 {
-		c.Redirect("/", http.StatusFound)
+		if HasTemplate("HOME") {
+			c.Redirect("/post/", http.StatusFound)
+		} else {
+			c.Redirect("/", http.StatusFound)
+		}
 		return
 	}
-	err := RenderHomePage(c, pos)
+	err := RenderArticles(c, pos)
 	if err != nil {
 		c.Error(fmt.Sprintf("%s: %s", webapp.ErrInternalServerError, err), http.StatusInternalServerError)
 	}
@@ -298,6 +313,10 @@ func HandleUpdateArticle(c *webapp.Context) {
 	article.Metadata.Name = strings.ToLower(strings.Trim(c.Request.FormValue("url"), " "))
 	article.Metadata.FeaturedPicURL = strings.Trim(c.Request.FormValue("fpic"), " ")
 	article.Metadata.Summary = strings.Trim(c.Request.FormValue("sum"), " ")
+	article.Metadata.IsPage, err = strconv.ParseBool(c.Request.FormValue("ispage"))
+	if err != nil {
+		article.Metadata.IsPage = false
+	}
 	article.Metadata.Author = GetConfig().AuthorName
 	article.Metadata.ModifiedTime = time.Now().Unix()
 	article.Text = template.HTML(c.Request.FormValue("text"))
@@ -421,7 +440,7 @@ func GetLastCommentMetadata(c *webapp.Context) (meta *CommentMetadata) {
 	return meta
 }
 
-func HandleSinglePage(c *webapp.Context, pagename string) {
+func HandleSingle(c *webapp.Context, pagename string) {
 	if TattooDB.Has(pagename) {
 		lastMeta := GetLastCommentMetadata(c)
 		err := RenderSinglePage(c, pagename, lastMeta)

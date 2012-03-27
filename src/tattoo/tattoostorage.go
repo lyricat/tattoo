@@ -23,6 +23,7 @@ type TattooStorage struct {
 	VarDB                webapp.FileStorage
 	ArticleTimeline      []string
 	ArticleTimelineIndex map[string]int
+	PageTimeline		 []string
 	CommentTimeline      []string
 }
 
@@ -65,12 +66,13 @@ func (db *TattooStorage) Load(app *webapp.App) {
 // And builds a mapping from articles' name to the position of according 
 // articles.
 func (s *TattooStorage) RebuildTimeline() {
-	num := s.ArticleDB.Count() - 1
-	s.ArticleTimeline = make([]string, num, num+1024)
+	s.ArticleTimeline = make([]string, 0)
 	s.ArticleTimelineIndex = make(map[string]int)
-	tmp := new(KeyPairs)
-	tmp.Items = make([]*KeyValuePair, num)
-	i := 0
+	s.PageTimeline = make([]string, 0)
+	tmp_a := new(KeyPairs)
+	tmp_a.Items = make([]*KeyValuePair, 0)
+	tmp_p := new(KeyPairs)
+	tmp_p.Items = make([]*KeyValuePair, 0)
 	var metadata *ArticleMetadata
 	var err error
 	for name, _ := range s.ArticleDB.Index {
@@ -81,16 +83,26 @@ func (s *TattooStorage) RebuildTimeline() {
 		if err != nil {
 			log.Printf("%v\n", err)
 		}
-		tmp.Items[i] = &KeyValuePair{Key: metadata.CreatedTime, Value: name}
-		i += 1
+		if metadata.IsPage {
+			tmp_p.Items = append(tmp_p.Items, &KeyValuePair{Key: metadata.CreatedTime, Value: name})
+		} else {
+			tmp_a.Items = append(tmp_a.Items, &KeyValuePair{Key: metadata.CreatedTime, Value: name})
+		}
 	}
-	sort.Sort(tmp)
-	for i, j := 0, len(tmp.Items)-1; i < j; i, j = i+1, j-1 {
-		tmp.Items[i], tmp.Items[j] = tmp.Items[j], tmp.Items[i]
+	sort.Sort(tmp_a)
+	for i, j := 0, len(tmp_a.Items)-1; i < j; i, j = i+1, j-1 {
+		tmp_a.Items[i], tmp_a.Items[j] = tmp_a.Items[j], tmp_a.Items[i]
 	}
-	for i = range tmp.Items {
-		s.ArticleTimeline[i] = tmp.Items[i].Value
-		s.ArticleTimelineIndex[tmp.Items[i].Value] = i
+	sort.Sort(tmp_p)
+	for i, j := 0, len(tmp_p.Items)-1; i < j; i, j = i+1, j-1 {
+		tmp_p.Items[i], tmp_p.Items[j] = tmp_p.Items[j], tmp_p.Items[i]
+	}
+	for i := range tmp_a.Items {
+		s.ArticleTimeline = append(s.ArticleTimeline, tmp_a.Items[i].Value)
+		s.ArticleTimelineIndex[tmp_a.Items[i].Value] = i
+	}
+	for i := range tmp_p.Items {
+		s.PageTimeline = append(s.PageTimeline, tmp_p.Items[i].Value)
 	}
 }
 
@@ -163,7 +175,7 @@ func (s *TattooStorage) GetMetadata(name string) (*ArticleMetadata, error) {
 	var meta = new(ArticleMetadata)
 	var err error
 	var tags string
-	var ctime, mtime, hits string
+	var ctime, mtime, hits, isPage string
 	meta.Name = name
 	meta.Author, err = s.MetadataDB.GetString(name + ".author")
 	if err != nil {
@@ -187,6 +199,15 @@ func (s *TattooStorage) GetMetadata(name string) (*ArticleMetadata, error) {
 	meta.Summary, err = s.MetadataDB.GetString(name + ".sum")
 	if err != nil {
 		meta.Summary = ""
+	}
+	isPage, err = s.MetadataDB.GetString(name + ".ispage")
+	if err != nil {
+		meta.IsPage = false
+	} else {
+		meta.IsPage, err = strconv.ParseBool(isPage)
+		if err != nil {
+			meta.IsPage = false
+		}
 	}
 	ctime, err = s.MetadataDB.GetString(name + ".ctime")
 	if err != nil {
@@ -223,6 +244,7 @@ func (s *TattooStorage) UpdateMetadata(meta *ArticleMetadata) {
 	// optional metadata
 	s.MetadataDB.SetString(name+".fpic", meta.FeaturedPicURL)
 	s.MetadataDB.SetString(name+".sum", meta.Summary)
+	s.MetadataDB.SetString(name+".ispage", strconv.FormatBool(meta.IsPage))
 	s.MetadataDB.SetString(name+".tags", strings.Join(meta.Tags, ","))
 	ctime := strconv.FormatInt(meta.CreatedTime, 10)
 	s.MetadataDB.SetString(name+".ctime", ctime)
@@ -356,6 +378,29 @@ func (s *TattooStorage) GetArticleTimelineByTag(from int, count int, tag string)
 		count = len(ret) - from
 	}
 	return ret[from : from+count], err
+}
+
+func (s *TattooStorage) GetPageTimeline(from int, count int) ([]*Article, error) {
+	if from < 0 || from > len(s.PageTimeline)-1 {
+		from = 0
+	}
+	if from+count > len(s.PageTimeline) {
+		count = len(s.PageTimeline) - from
+	}
+	var err error
+	var meta *ArticleMetadata
+	var text []byte
+	tlSlice := s.PageTimeline[from : from+count]
+	ret := make([]*Article, count)
+	for i := 0; i < count; i += 1 {
+		name := tlSlice[i]
+		ret[i] = new(Article)
+		meta, err = s.GetMetadata(name)
+		ret[i].Metadata = *meta
+		text, err = s.GetArticle(name)
+		ret[i].Text = template.HTML(text)
+	}
+	return ret, err
 }
 
 func (s *TattooStorage) UpdateArticle(name string, text []byte) {

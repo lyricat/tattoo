@@ -74,6 +74,14 @@
 							<td class="label"><label>Summary</label></td>
 							<td>
 								<textarea id="summary_box" name="sum" placeholder="Summary of your article">{{.Summary}}</textarea></td>
+							<td class="label"><label for="">Is Page?</label></td>
+							<td>
+							{{if .IsPage}}
+								<input type="checkbox" name="ispage" value="true" checked/>
+							{{else}}
+								<input type="checkbox" name="ispage" value="true"/>
+							{{end}}
+							</td>
 						</tr>
 					</table>
 					</details>

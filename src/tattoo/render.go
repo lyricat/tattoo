@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"strings"
 	"webapp"
+	"reflect"
+	"os"
 )
 
 var mainTPL *template.Template
@@ -15,6 +17,25 @@ var guardTPL *template.Template
 var feedTPL *template.Template
 var editorTPL *template.Template
 var notFoundTPL *template.Template
+
+func HasTemplate(name string) bool {
+	return mainTPL.Lookup(name) != nil
+}
+
+func parseTemplates(fileList []string) (tpl *template.Template, err error) {
+	files_val := make([]reflect.Value, len(fileList))
+	for i, filename := range fileList {
+		files_val[i] = reflect.ValueOf(filename)
+	}
+	f := template.ParseFiles
+	proc := reflect.ValueOf(f)
+	ret := proc.Call(files_val)
+	tpl, _err := ret[0].Interface().(*template.Template), ret[1].Interface()
+	if _err != nil {
+		err = _err.(error)
+	}
+	return
+}
 
 func LoadSystemTemplates() error {
 	var err error
@@ -48,15 +69,28 @@ func LoadSystemTemplates() error {
 func LoadThemeTemplates(themeName string) error {
 	var err error
 	// required templates
-	mainTPL, err = template.ParseFiles(
-		fmt.Sprintf("theme/%s/template/bare.html", themeName),
-		fmt.Sprintf("theme/%s/template/header.html", themeName),
-		fmt.Sprintf("theme/%s/template/footer.html", themeName),
-		fmt.Sprintf("theme/%s/template/tag.html", themeName),
-		fmt.Sprintf("theme/%s/template/article.html", themeName),
-		fmt.Sprintf("theme/%s/template/articles.html", themeName),
-		fmt.Sprintf("theme/%s/template/content.html", themeName))
+	required_files := []string {
+		"theme/%s/template/bare.html",
+		"theme/%s/template/header.html",
+		"theme/%s/template/footer.html",
+		"theme/%s/template/tag.html",
+		"theme/%s/template/article.html",
+		"theme/%s/template/articles.html",
+		"theme/%s/template/content.html",
+		"theme/%s/template/page.html",
+		// replace with articles.html if doesn't exist
+		"theme/%s/template/home.html"}
+	files := make([]string, 0);
+	for _, filename := range required_files {
+		filename = fmt.Sprintf(filename, themeName)
+		if _, err := os.Stat(filename); err == nil {
+			files = append(files, filename)
+		}
+	}
+	fmt.Printf("%v, %v\n", len(files), files)
+	mainTPL, err = parseTemplates(files)
 	if err != nil {
+		fmt.Printf("%v", err)
 		return err
 	}
 	// optional templates
@@ -65,6 +99,14 @@ func LoadThemeTemplates(themeName string) error {
 	if err != nil {
 		return err
 	}
+	return err
+}
+
+func RenderHome(ctx *webapp.Context) error {
+	vars := make(map[string]interface{})
+	data := MakeData(ctx, vars)
+	data.Flags.Home = true
+	err := ctx.Execute(mainTPL, &data)
 	return err
 }
 
@@ -96,12 +138,12 @@ func RenderTagPage(ctx *webapp.Context, offset int, tag string) error {
 		vars["AtBegin"] = true
 	}
 	data := MakeData(ctx, vars)
-	data.Flags.HasTag = true
+	data.Flags.Tag = true
 	err := ctx.Execute(mainTPL, &data)
 	return err
 }
 
-func RenderHomePage(ctx *webapp.Context, offset int) error {
+func RenderArticles(ctx *webapp.Context, offset int) error {
 	vars := make(map[string]interface{})
 	vars["Offset"] = offset
 
@@ -115,7 +157,7 @@ func RenderHomePage(ctx *webapp.Context, offset int) error {
 		vars["AtBegin"] = true
 	}
 	data := MakeData(ctx, vars)
-	data.Flags.Home = true
+	data.Flags.Articles = true
 	err := ctx.Execute(mainTPL, &data)
 	return err
 }

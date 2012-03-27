@@ -119,6 +119,7 @@ body {
 }
 #meta_pane td {
 	padding: 3px 0;
+	vertical-align: middle;
 }
 #meta_pane .label {
 	vertical-align: middle;

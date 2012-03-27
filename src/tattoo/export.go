@@ -39,6 +39,36 @@ func (e *Export) GetNextTLPos(offset int, count int) int {
 	return next
 }
 
+func (e *Export) GetPrevPageTLPos(offset int, count int) int {
+	if count <= 0 {
+		count = GetConfig().TimelineCount
+	}
+	prev := offset - count
+	if prev < 0 {
+		return 0
+	}
+	if prev > TattooDB.GetArticleCount()-1 {
+		return TattooDB.GetArticleCount() - 1
+	}
+	return prev
+}
+
+func (e *Export) GetNextPageTLPos(offset int, count int) int {
+	if count <= 0 {
+		count = GetConfig().TimelineCount
+	}
+	next := offset + count
+	if next < GetConfig().TimelineCount {
+		return 0
+	}
+	total := TattooDB.GetArticleCount()
+	if next > total-1 {
+		return total - 1
+	}
+	return next
+}
+
+
 func (e *Export) GetPrevCommentTLPos(offset int, count int) int {
 	if count <= 0 {
 		count = GetConfig().TimelineCount
@@ -116,6 +146,11 @@ func (e *Export) GetArticleTimeline(offset int, count int) []*Article {
 func (e *Export) GetArticleTimelineByTag(offset int, count int, tag string) []*Article {
 	articles, _ := TattooDB.GetArticleTimelineByTag(offset, count, tag)
 	return articles
+}
+
+func (e *Export) GetPageTimeline(offset int, count int) []*Article {
+	pages, _ := TattooDB.GetPageTimeline(offset, count)
+	return pages
 }
 
 func (e *Export) GetArticle(name string) *Article {

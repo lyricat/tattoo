@@ -6,12 +6,15 @@ import (
 )
 
 type T_FLAGS struct {
-	Single bool
-	HasTag bool
 	Home   bool
+	Articles bool
+	Single bool
+	Tag bool
+	Page bool
 	Feed   bool
 
 	WriterOverview bool
+	WriterPages	   bool
 	WriterTags     bool
 	WriterComments bool
 	WriterSettings bool
