@@ -44,6 +44,7 @@ func LoadSystemTemplates() error {
 		"sys/template/bare.html",
 		"sys/template/nav.html",
 		"sys/template/tags.html",
+		"sys/template/pages.html",
 		"sys/template/comments.html",
 		"sys/template/settings.html",
 		"sys/template/overview.html",
@@ -207,6 +208,25 @@ func RenderWriterOverview(ctx *webapp.Context, offset int) error {
 	}
 	data := MakeData(ctx, vars)
 	data.Flags.WriterOverview = true
+	err := ctx.Execute(writerTPL, &data)
+	return err
+}
+
+func RenderWriterPages(ctx *webapp.Context, offset int) error {
+	vars := make(map[string]interface{})
+	vars["Offset"] = offset
+
+	vars["AtBegin"] = false
+	vars["AtEnd"] = false
+	vars["Offset"] = offset
+	if TattooDB.GetPageCount()-1-offset < 20 {
+		vars["AtEnd"] = true
+	}
+	if offset < 20 {
+		vars["AtBegin"] = true
+	}
+	data := MakeData(ctx, vars)
+	data.Flags.WriterPages = true
 	err := ctx.Execute(writerTPL, &data)
 	return err
 }

@@ -303,8 +303,16 @@ func (s *TattooStorage) GetArticleSource(name string) ([]byte, error) {
 	return s.ArticleDB.Get(name)
 }
 
-func (s *TattooStorage) GetArticleCount() int {
+func (s *TattooStorage) GetFullArticleCount() int {
 	return s.ArticleDB.Count()
+}
+
+func (s *TattooStorage) GetArticleCount() int {
+	return len(s.ArticleTimeline)
+}
+
+func (s *TattooStorage) GetPageCount() int {
+	return len(s.PageTimeline)
 }
 
 func (s *TattooStorage) GetArticleFull(name string) (*Article, error) {

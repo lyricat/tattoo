@@ -3,6 +3,9 @@
 	{{if .Flags.WriterOverview}}
 		{{template "OVERVIEW" .}}
 	{{end}}
+	{{if .Flags.WriterPages}}
+		{{template "PAGES" .}}
+	{{end}}
 	{{if .Flags.WriterComments}}
 		{{template "COMMENTS" .}}
 	{{end}}

@@ -229,11 +229,10 @@ func HandleWriter(c *webapp.Context, pathLevels []string) {
 		}
 		if pathLevels[1] == "overview" {
 			pos, _ := strconv.Atoi(c.Request.FormValue("pos"))
-			if pos > TattooDB.GetArticleCount()-1 {
-				c.Redirect("/writer/overview", http.StatusFound)
-				return
-			}
 			err = RenderWriterOverview(c, pos)
+		} else if pathLevels[1] == "pages" {
+			pos, _ := strconv.Atoi(c.Request.FormValue("pos"))
+			err = RenderWriterPages(c, pos)
 		} else if pathLevels[1] == "comments" {
 			pos, _ := strconv.Atoi(c.Request.FormValue("pos"))
 			if pos > TattooDB.GetCommentCount()-1 {
