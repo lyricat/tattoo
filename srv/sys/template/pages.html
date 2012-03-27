@@ -1,0 +1,56 @@
+{{define "PAGES"}}
+
+{{$cur_offset := .Vars.Offset}}
+<div id="article_area">
+  <h2>PAGES</h2>
+	<table id="article_list" class="area_table">
+		<tr>
+			<th style="width: 300px">Title</th><th>Author</th><th>Create</th><th>Modified</th><th>Comments</th><th>Hits</th><th>Delete</th>
+    </tr>
+	{{range $index, $article := $.Fn.GetPageTimeline $cur_offset 20}}
+    <tr>
+      {{with .Metadata}}
+      <td>
+				<a href="/writer/edit/{{.Name|html}}">{{.Title}}</a>
+        <a href="/{{.Name|html}}">#</a>
+      </td>
+      <td>
+        {{.Author|html}}
+      </td>
+      <td>
+        {{.CreatedTimeHumanReading|html}}
+      </td>
+      <td>
+        {{.ModifiedTimeHumanReading|html}}
+      </td>
+      <td>
+        {{$.Fn.GetArticleCommentCount .Name}}
+      </td>
+      <td>
+        {{.Hits|html}}
+      </td>
+      <td>
+        <a href="/writer/delete/{{.Name|html}}" class="button" style="min-width: 30px; padding: 2px;">X</a>
+      </td>
+      {{end}}
+    </tr>
+	{{else}}
+		<tr><td><div>There are no items</div></td><tr>
+	{{end}}
+	</table>
+
+	<div>
+    {{if not .Vars.AtBegin }} 
+			<a href="/writer/pages?pos={{$.Fn.GetPrevTLPos $cur_offset 20}}" class="button">
+				<span class="label">Prev</span>
+			</a>
+		{{end}}
+    {{if not .Vars.AtEnd }} 
+			<a href="/writer/pages?pos={{$.Fn.GetNextTLPos $cur_offset 20}}" class="button">
+			<span class="label">Next</span>
+		</a>
+		{{end}}
+	</div>
+</div> 
+
+{{end}}
