@@ -1,0 +1,40 @@
+{{define "PAGE"}}
+
+{{$url := .ContextInfo.URL}}
+{{$name := .Vars.Name}}
+{{$article := $.Fn.GetArticle $name}}
+{{$siteURL := .SiteConfig.SiteURL}}
+<div class="article">
+	{{with $article}}
+	<div class="inner">
+		{{with .Metadata}}
+		<h2 class="article_title title"><a href="#">{{.Title}}</a></h2>
+		<div class="article_meta">
+			<div class="share">
+				<a href="https://twitter.com/share" class="twitter-share-button" data-via="shellex">Tweet</a>
+				<div class="g-plusone" data-size="medium"></div>
+			</div>
+			<span>by</span>
+			{{.Author}}
+			<span>on</span>
+			{{$ctime := .GetCreatedTime}}
+			{{.GetShortMonth $ctime}} {{$ctime.Day}}, {{$ctime.Year}}
+			<span>with</span>
+			<a href="{{$siteURL}}/{{ $article.Metadata.Name}}#comments">{{$.Fn.GetArticleCommentCount .Name}} Comments</a>
+		</div>
+		{{end}}
+		<div class="text">
+			{{.Text}}
+		</div>
+		<div class="big_sep"></div>
+		<div class="article_meta">
+			<span>tagged:</span>
+			{{range $tagIndex, $tag := $.Fn.GetArticleTags $article.Metadata.Name}}
+			<a class="tag" href="{{$siteURL}}/t/{{$tag}}">{{$tag}},</a> 
+			{{end}}
+		</div>
+	</div> <!-- .inner -->
+	{{end}}
+</div>	<!-- .article -->
+
+{{end}}
