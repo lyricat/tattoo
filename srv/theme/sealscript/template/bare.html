@@ -25,36 +25,57 @@
 {{template "FOOTER" .}}
 <!-- Navigation Utils -->
 <a id="scroll_to_top" href="#" class="v_nav"></a>
-{{ if .Flags.Single}} 
-	<!-- for single page -->
-	{{ $cur_name := .Vars.Name }}
-	{{ $prev_name := $.Fn.GetPrevArticleName $cur_name }}
-	{{ $next_name := $.Fn.GetNextArticleName $cur_name }}
-	<a id="prev" href="/{{$prev_name}}" hash="{{$cur_name}}" class="v_nav"
-		{{ if $prev_name }} 
-		style="display: block"
+{{ if not .Flags.Page }} 
+	{{ if .Flags.Single}} 
+		<!-- for single page -->
+		{{ $cur_name := .Vars.Name }}
+		{{ $prev_name := $.Fn.GetPrevArticleName $cur_name }}
+		{{ $next_name := $.Fn.GetNextArticleName $cur_name }}
+		<a id="prev" href="/{{$prev_name}}" hash="{{$cur_name}}" class="v_nav"
+			{{ if $prev_name }} 
+			style="display: block"
+			{{ else }}
+			style="display: none"
+			{{ end }}
+			>
+			<span class="icon">Prev</span>
+		</a>
+		<a id="next" href="/{{$next_name}}" hash="{{$cur_name}}" class="v_nav"
+			{{ if $next_name }} 
+			style="display: block"
+			{{ else }}
+			style="display: none"
+			{{ end }}
+			>
+			<span class="icon">Next</span>
+		</a>
+	{{ else }}
+		<!-- for list page -->
+		{{ $cur_offset := .Vars.Offset }}
+		{{ if .Flags.Tag }}
+			<!-- for tag page -->
+			{{ $tag := .Vars.Tag }}
+			<a id="prev" href="/t/{{$tag}}?pos={{ $.Fn.GetPrevTagTLPos $tag $cur_offset 10}}" class="v_nav" hash="t/{{$tag}}?pos={{$cur_offset}}"
+				{{ if .Vars.AtBegin }} 
+				style="display: none"
+				{{ else }}
+				style="display: block"
+				{{ end }}
+				>
+				<span class="icon">Prev</span>
+			</a>
+			<a id="next" href="/t/{{$tag}}?pos={{ $.Fn.GetNextTagTLPos $tag $cur_offset 10}}" class="v_nav" hash="t/{{$tag}}?pos={{$cur_offset}}"
+				{{ if .Vars.AtEnd }} 
+				style="display: none"
+				{{ else }}
+				style="display: block"
+				{{ end }}
+				>
+				<span class="icon">Next</span>
+			</a>
 		{{ else }}
-		style="display: none"
-		{{ end }}
-		>
-		<span class="icon">Prev</span>
-	</a>
-	<a id="next" href="/{{$next_name}}" hash="{{$cur_name}}" class="v_nav"
-		{{ if $next_name }} 
-		style="display: block"
-		{{ else }}
-		style="display: none"
-		{{ end }}
-		>
-		<span class="icon">Next</span>
-	</a>
-{{ else }}
-	<!-- for list page -->
-  {{ $cur_offset := .Vars.Offset }}
-	{{ if .Flags.Tag }}
-		<!-- for tag page -->
-		{{ $tag := .Vars.Tag }}
-		<a id="prev" href="/t/{{$tag}}?pos={{ $.Fn.GetPrevTagTLPos $tag $cur_offset 10}}" class="v_nav" hash="t/{{$tag}}?pos={{$cur_offset}}"
+		<!-- for articles page -->
+		<a id="prev" href="/?pos={{ $.Fn.GetPrevTLPos $cur_offset 0}}" class="v_nav" hash="pos={{$cur_offset}}"
 			{{ if .Vars.AtBegin }} 
 			style="display: none"
 			{{ else }}
@@ -63,7 +84,7 @@
 			>
 			<span class="icon">Prev</span>
 		</a>
-		<a id="next" href="/t/{{$tag}}?pos={{ $.Fn.GetNextTagTLPos $tag $cur_offset 10}}" class="v_nav" hash="t/{{$tag}}?pos={{$cur_offset}}"
+		<a id="next" href="/?pos={{ $.Fn.GetNextTLPos $cur_offset 0}}" class="v_nav" hash="pos={{$cur_offset}}"
 			{{ if .Vars.AtEnd }} 
 			style="display: none"
 			{{ else }}
@@ -72,26 +93,7 @@
 			>
 			<span class="icon">Next</span>
 		</a>
-	{{ else }}
-	<!-- for articles page -->
-	<a id="prev" href="/?pos={{ $.Fn.GetPrevTLPos $cur_offset 0}}" class="v_nav" hash="pos={{$cur_offset}}"
-		{{ if .Vars.AtBegin }} 
-		style="display: none"
-		{{ else }}
-		style="display: block"
 		{{ end }}
-		>
-		<span class="icon">Prev</span>
-	</a>
-	<a id="next" href="/?pos={{ $.Fn.GetNextTLPos $cur_offset 0}}" class="v_nav" hash="pos={{$cur_offset}}"
-		{{ if .Vars.AtEnd }} 
-		style="display: none"
-		{{ else }}
-		style="display: block"
-		{{ end }}
-		>
-		<span class="icon">Next</span>
-	</a>
 	{{ end }}
 {{ end }}
 <!-- Debug Info -->

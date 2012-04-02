@@ -173,7 +173,11 @@ func (e *Export) GetArticleTags(name string) []string {
 }
 
 func (e *Export) GetTagList(count int) []TagWrapper {
-	return TattooDB.GetTags()
+	ret := TattooDB.GetTags()
+	if len(ret) < count {
+		return ret
+	}
+	return ret[0:count]
 }
 
 func (e * Export) GetRootURL() string {
