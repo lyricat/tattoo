@@ -26,7 +26,7 @@
 			<div class="article_meta">
 				<span>tagged:</span>
 				{{range $tagIndex, $tag := $.Fn.GetArticleTags $article.Metadata.Name}}
-				<a class="tag" href="{{$siteURL}}/t/{{$tag}}">{{$tag}}</a>, 
+				<a class="tag" href="{{$siteURL}}/tag/{{$tag}}">{{$tag}}</a>, 
 				{{end}}
 			</div>
 		</div>

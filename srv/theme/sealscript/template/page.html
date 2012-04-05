@@ -5,9 +5,8 @@
 {{$article := $.Fn.GetArticle $name}}
 {{$siteURL := .SiteConfig.SiteURL}}
 <div class="article">
-	{{with $article}}
 	<div class="inner">
-		{{with .Metadata}}
+		{{with $article.Metadata}}
 		<h2 class="article_title title"><a href="#">{{.Title}}</a></h2>
 		<div class="article_meta">
 			<div class="share">
@@ -24,17 +23,64 @@
 		</div>
 		{{end}}
 		<div class="text">
-			{{.Text}}
+			{{$article.Text}}
 		</div>
 		<div class="big_sep"></div>
 		<div class="article_meta">
 			<span>tagged:</span>
 			{{range $tagIndex, $tag := $.Fn.GetArticleTags $article.Metadata.Name}}
-			<a class="tag" href="{{$siteURL}}/t/{{$tag}}">{{$tag}},</a> 
+			<a class="tag" href="{{$siteURL}}/tag/{{$tag}}">{{$tag}},</a> 
 			{{end}}
 		</div>
+		<h2 class="comments_title title">{{$.Fn.GetArticleCommentCount $name}} COMMENTS ON "{{$article.Metadata.Title}}"</h2>
+		<ul id="comments" class="comments">
+			{{range $index, $comm := $.Fn.GetArticleComments $name}}
+			{{with $comm}}
+			<li id="comment_{{.Metadata.Name}}" class="comment">
+			<div class="avatar">
+				{{if .Metadata.EmailHash}}
+				<img src="http://www.gravatar.com/avatar/{{.Metadata.EmailHash}}?r=g&d=mm&s=48" onerror="javascript:this.src='{{$.Fn.GetThemeStaticURL}}/image/default_avatar.png'"/>
+				{{else}}
+				<img src="/static/image/default_avatar.png"/>
+				{{end}}
+			</div>
+			<div class="comment_body">
+				<div class="comment_meta">
+					{{if .Metadata.URL}}
+					<a href="{{.Metadata.URL}}" rel="external nofollow" class="comment_author_url author">{{.Metadata.Author | html}}</a>
+					{{else}}
+					<span rel="external nofollow" class="comment_author_url author">{{.Metadata.Author}}</span>
+					{{end}}
+					<a href="{{$url}}/#comment_{{.Metadata.Name}}" title="{{.Metadata.UAgent}}" rel="nofollow" class="time">
+						{{.Metadata.CreatedTimeHumanReading}}
+					</a>
+				</div>
+				<div class="comment_text">{{.Text}}</div>
+			</div>
+			<a href="#respond" class="reply" title="Notify this pumpkin." onclick="document.getElementById('comment').focus();document.getElementById('comment').value += '@[{{.Metadata.Author}}](#comment_{{.Metadata.Name}}) '">Reply</a>
+			<div class="sep"></div>
+			</li>
+			{{end}}
+			{{end}} <!-- range -->
+		</ul>
+		<div id="respond" class="comments_reply">
+			<h3 class="title">Leave a Reply</h3>
+			<form action="/" method="GET" id="comment_form" name="comment" prefix="/comment/" onsubmit="this.method='POST';this.action=this.getAttribute('prefix')+'n'+'e'+'w'">
+				<p><input type="text" name="author" id="author"size="22" tabindex="1" aria-required="true" value="{{.Vars.LastCommentMeta.Author}}">
+				<label for="author">Name (required)</label></p>
+
+				<p><input type="text" name="email" id="email" size="22" tabindex="2" aria-required="true" value="{{.Vars.LastCommentMeta.Email}}">
+				<label for="email">Mail (will not be published or shared) (required)</label></p>
+
+				<p><input type="text" name="url" id="url" size="22" tabindex="3" value="{{.Vars.LastCommentMeta.URL}}">
+				<label for="url">Website</label></p>
+				<p><textarea name="text" id="comment" cols="100%" rows="10" tabindex="4"></textarea></p>
+				<p><input name="submit" class="button" type="submit" id="submit" tabindex="5" value="Submit Comment">
+				<input type="hidden" name="article_name" value="{{$article.Metadata.Name}}"/>
+				</p>
+			</form>
+		</div> <!-- #respond -->
 	</div> <!-- .inner -->
-	{{end}}
 </div>	<!-- .article -->
 
 {{end}}

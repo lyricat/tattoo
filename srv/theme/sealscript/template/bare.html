@@ -55,7 +55,7 @@
 		{{ if .Flags.Tag }}
 			<!-- for tag page -->
 			{{ $tag := .Vars.Tag }}
-			<a id="prev" href="/t/{{$tag}}?pos={{ $.Fn.GetPrevTagTLPos $tag $cur_offset 10}}" class="v_nav" hash="t/{{$tag}}?pos={{$cur_offset}}"
+			<a id="prev" href="/tag/{{$tag}}?pos={{ $.Fn.GetPrevTagTLPos $tag $cur_offset 10}}" class="v_nav" hash="t/{{$tag}}?pos={{$cur_offset}}"
 				{{ if .Vars.AtBegin }} 
 				style="display: none"
 				{{ else }}
@@ -64,7 +64,7 @@
 				>
 				<span class="icon">Prev</span>
 			</a>
-			<a id="next" href="/t/{{$tag}}?pos={{ $.Fn.GetNextTagTLPos $tag $cur_offset 10}}" class="v_nav" hash="t/{{$tag}}?pos={{$cur_offset}}"
+			<a id="next" href="/tag/{{$tag}}?pos={{ $.Fn.GetNextTagTLPos $tag $cur_offset 10}}" class="v_nav" hash="t/{{$tag}}?pos={{$cur_offset}}"
 				{{ if .Vars.AtEnd }} 
 				style="display: none"
 				{{ else }}

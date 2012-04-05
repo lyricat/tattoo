@@ -8,13 +8,13 @@
 				<ul class="right">
 					<li><a href="/">Home</a></li>
 					<li class="dot">&bull;</a>
-					<li><a href="/t/tech">Tech</a></li>
+					<li><a href="/tag/tech">Tech</a></li>
 					<li class="dot">&bull;</a>
-					<li><a href="/t/english">English</a></li>
+					<li><a href="/tag/english">English</a></li>
 					<li class="dot">&bull;</a>
-					<li><a href="/t/paint">Artworks</a></li>
+					<li><a href="/tag/paint">Artworks</a></li>
 					<li class="dot">&bull;</a>
-					<li><a href="/t/linux">Linux</a></li>
+					<li><a href="/tag/linux">Linux</a></li>
 					<li class="dot">&bull;</a>
 					<li><a href="/about">About</a></li>
 				</ul>
@@ -32,7 +32,7 @@
 			<li>
 				<a href="/{{$comm.Metadata.ArticleName}}/#comment_{{$comm.Metadata.Name}}" class="avatar recent_comment">
 					{{if $comm.Metadata.EmailHash}}
-					<img src="http://www.gravatar.com/avatar/{{$comm.Metadata.EmailHash}}?r=g&d=mm&s=32" onerror="javascript:this.src='{{$.Fn.GetThemeStaticURL}}/image/default_avatar.png'"/>
+					<img src="http://www.gravatar.com/avatar/{{$comm.Metadata.EmailHash}}?r=g&d=mm&s=32" onerror="javascript:this.src='{{$.Fn.GetThemeStaticURL}}/image/default_avatar.png'; return false;"/>
 					{{else}}
 					<img src="{{$.Fn.GetThemeStaticURL}}/image/default_avatar.png"/>
 					{{end}}

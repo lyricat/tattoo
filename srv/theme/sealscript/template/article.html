@@ -4,10 +4,9 @@
 {{$name := .Vars.Name}}
 {{$article := $.Fn.GetArticle $name}}
 {{$siteURL := .SiteConfig.SiteURL}}
-{{with $article}}
 <div class="article">
 	<div class="inner">
-		{{with .Metadata}}
+		{{with $article.Metadata}}
 		<h2 class="article_title title"><a href="#">{{.Title}}</a></h2>
 		<div class="article_meta">
 			<div class="share">
@@ -24,13 +23,13 @@
 		</div>
 		{{end}}
 		<div class="text">
-			{{.Text}}
+			{{$article.Text}}
 		</div>
 		<div class="big_sep"></div>
 		<div class="article_meta">
 			<span>tagged:</span>
 			{{range $tagIndex, $tag := $.Fn.GetArticleTags $article.Metadata.Name}}
-			<a class="tag" href="{{$siteURL}}/t/{{$tag}}">{{$tag}},</a> 
+			<a class="tag" href="{{$siteURL}}/tag/{{$tag}}">{{$tag}},</a> 
 			{{end}}
 		</div>
 		<h2 class="comments_title title">{{$.Fn.GetArticleCommentCount $name}} COMMENTS ON "{{$article.Metadata.Title}}"</h2>
@@ -40,7 +39,7 @@
 			<li id="comment_{{.Metadata.Name}}" class="comment">
 			<div class="avatar">
 				{{if .Metadata.EmailHash}}
-				<img src="http://www.gravatar.com/avatar/{{.Metadata.EmailHash}}?r=g&d=mm&s=48" onerror="javascript:this.src='/static/image/default_avatar.png'"/>
+				<img src="http://www.gravatar.com/avatar/{{.Metadata.EmailHash}}?r=g&d=mm&s=48" onerror="javascript:this.src='{{$.Fn.GetThemeStaticURL}}/image/default_avatar.png'"/>
 				{{else}}
 				<img src="/static/image/default_avatar.png"/>
 				{{end}}
@@ -64,7 +63,6 @@
 			{{end}}
 			{{end}}
 		</ul>
-		{{end}}
 		<div id="respond" class="comments_reply">
 			<h3 class="title">Leave a Reply</h3>
 			<form action="/" method="GET" id="comment_form" name="comment" prefix="/comment/" onsubmit="this.method='POST';this.action=this.getAttribute('prefix')+'n'+'e'+'w'">

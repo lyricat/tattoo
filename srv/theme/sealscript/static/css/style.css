@@ -254,16 +254,13 @@ input[type="text"]:focus, textarea:focus {
 .article {
 	font-size: 16px;
 	padding: 15px;
-	background: #f2f2f2;
+	background: #F2F2F2;
 	margin: 40px auto;
 	width: 660px;
 	border: 1px white solid;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
-	-webkit-box-shadow: 0 1px 3px #A8B1B9;
-	-moz-box-shadow: 0 1px 3px #A8B1B9;
-	box-shadow: 0 1px 3px #A8B1B9;
+	-webkit-box-shadow: 0 1px 10px #A8B1B9;
+	-moz-box-shadow: 0 1px 10px #A8B1B9;
+	box-shadow: 0 1px 10px #58B1B9;
 	text-shadow: 0 1px 1px white;
 }
 
@@ -362,17 +359,16 @@ input[type="text"]:focus, textarea:focus {
 	max-width: 570px;
 }
 .article pre {
-	margin: 10px;
-	background: white;
-	border-radius: 3px;
-	border: 1px solid #CDCDCD;
-	box-shadow: 0 1px 0 white,0 1px 3px rgba(0, 0, 0, .1) inset;
-	color: black;
-	font: 12px/1.5 Monaco,monospace;
+	margin: 10px -37px;
+	background: #222;
+	color: white;
+	font: 12px Monaco,monospace;
 	overflow-x: auto;
-	padding: 12px;
+	padding: 20px 37px;
 	white-space: pre;
 	word-wrap: normal;
+	text-shadow: 0 -1px 1px #000;
+	box-shadow: inset 0 0 10px #000;
 }
 .article code {
 	font-size: 14px;
