@@ -374,9 +374,7 @@ func HandleUpdateArticle(c *webapp.Context) {
 		TattooDB.RenameComments(origName, article.Metadata.Name)
 	}
 	TattooDB.Dump()
-	if isNew || isRename {
-		TattooDB.RebuildTimeline()
-	}
+	TattooDB.RebuildTimeline()
 	c.Redirect("/writer/overview", http.StatusFound)
 	return
 }
