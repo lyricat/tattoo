@@ -55,6 +55,8 @@ func HandleRoot(c *webapp.Context) {
 			} else {
 				Render404page(c, NOT_FOUND_MESSAGE)
 			}
+		} else if pathLevels[0] == "articles" {
+			HandleArticles(c)
 		} else {
 			// single page
 			HandleSingle(c, strings.ToLower(url.QueryEscape(pathLevels[0])))
@@ -71,9 +73,9 @@ func HandleHome(c *webapp.Context) {
 
 func HandleArticles(c *webapp.Context) {
 	pos, _ := strconv.Atoi(c.Request.FormValue("pos"))
-	if pos > TattooDB.GetArticleCount()-1 {
+	if TattooDB.GetArticleCount() != 0 && pos > TattooDB.GetArticleCount()-1 {
 		if HasTemplate("HOME") {
-			c.Redirect("/post/", http.StatusFound)
+			c.Redirect("/articles/", http.StatusFound)
 		} else {
 			c.Redirect("/", http.StatusFound)
 		}
@@ -91,7 +93,7 @@ func HandleTag(c *webapp.Context, tag string) {
 		Render404page(c, NOT_FOUND_MESSAGE)
 	}
 	pos, _ := strconv.Atoi(c.Request.FormValue("pos"))
-	if pos > TattooDB.GetTagArticleCount(tag)-1 {
+	if TattooDB.GetTagArticleCount(tag) != 0 && pos > TattooDB.GetTagArticleCount(tag)-1 {
 		c.Redirect("/", http.StatusFound)
 		return
 	}
