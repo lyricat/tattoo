@@ -68,6 +68,46 @@ func (meta *ArticleMetadata) HasSummary() bool {
 	return true
 }
 
+func (m * ArticleMetadata) BuildFromJson(json interface{}) {
+	var jsonMap map[string]interface{}
+	jsonMap = json.(map[string]interface{})
+	for k, v := range jsonMap {
+		switch vv := v.(type) {
+		case string:
+			switch k {
+			case "Name":
+				m.Name = vv
+			case "Author":
+				m.Author = vv
+			case "Title":
+				m.Title = vv
+			case "FeaturedPicURL":
+				m.FeaturedPicURL = vv
+			case "Summary":
+				m.Summary = vv
+			case "Tags":
+				m.Tags = []string{}
+				tags := strings.Split(vv, ",")
+				for _, t := range tags {
+					m.Tags = append(m.Tags, t)
+				}
+			}
+		case bool:
+			if k == "IsPage" {
+				m.IsPage = bool(vv)
+			}
+		case float64:
+			if k == "CreatedTime" {
+				m.CreatedTime = int64(vv)
+			} else if k == "ModifiedTime" {
+				m.ModifiedTime = int64(vv)
+			} else if k == "Hits" {
+				m.Hits = int64(vv)
+			}
+		}
+	}
+}
+
 type CommentIndexItem struct {
 	Name         string
 	CommentNames []string

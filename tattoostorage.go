@@ -6,8 +6,6 @@ import (
 	"html/template"
 	"log"
 	"sort"
-	"strconv"
-	"strings"
 	"github.com/shellex/tattoo/webapp"
 )
 
@@ -39,7 +37,7 @@ func (db *TattooStorage) Load(app *webapp.App) {
 	app.Log("Tattoo DB", "Init DB: Article HTML DB")
 	db.ArticleHTMLDB.Init("storage/html/", webapp.FILE_STORAGE_MODE_MULIPLE)
 	app.Log("Tattoo DB", "Init DB: Article Metadata DB")
-	db.MetadataDB.Init("storage/metadata.json", webapp.FILE_STORAGE_MODE_SINGLE)
+	db.MetadataDB.Init("storage/metadata/", webapp.FILE_STORAGE_MODE_MULIPLE)
 	app.Log("Tattoo DB", "Init DB: Vars DB")
 	db.VarDB.Init("storage/var.json", webapp.FILE_STORAGE_MODE_SINGLE)
 
@@ -79,7 +77,7 @@ func (s *TattooStorage) RebuildTimeline() {
 		if name == "*" {
 			continue
 		}
-		metadata, err = s.GetMetadata(name)
+		metadata, err = s.GetMeta(name)
 		if err != nil {
 			log.Printf("%v\n", err)
 		}
@@ -170,8 +168,26 @@ func (s *TattooStorage) Has(name string) bool {
 	return false
 }
 
-// TattooStorage.GetMetadata gets the metadata of an article specified by the name.
-func (s *TattooStorage) GetMetadata(name string) (*ArticleMetadata, error) {
+func (db * TattooStorage) GetMetaJSON(name string) (interface{}, error) {
+	if ! db.MetadataDB.Has(name) {
+		return nil, errors.New(webapp.ErrNotFound)
+	}
+	meta, _ := db.MetadataDB.GetJSON(name)
+	return meta, nil
+}
+
+// TattooStorage.GetMeta gets the metadata of an article specified by the name.
+func (db *TattooStorage) GetMeta(name string) (*ArticleMetadata, error) {
+	raw, err := db.GetMetaJSON(name)
+	if err != nil {
+		return nil, errors.New(webapp.ErrNotFound)
+	} else {
+		meta := new (ArticleMetadata)
+		meta.BuildFromJson(raw)
+		return meta, nil
+	}
+	return nil, nil
+/*
 	var meta = new(ArticleMetadata)
 	var err error
 	var tags string
@@ -234,34 +250,18 @@ func (s *TattooStorage) GetMetadata(name string) (*ArticleMetadata, error) {
 		return nil, errors.New(webapp.ErrInternalServerError)
 	}
 	return meta, nil
+*/
 }
 
 // TattooStorage.UpdateMetadata updates a specified metadata
 func (s *TattooStorage) UpdateMetadata(meta *ArticleMetadata) {
 	name := meta.Name
-	s.MetadataDB.SetString(name+".author", meta.Author)
-	s.MetadataDB.SetString(name+".title", meta.Title)
-	// optional metadata
-	s.MetadataDB.SetString(name+".fpic", meta.FeaturedPicURL)
-	s.MetadataDB.SetString(name+".sum", meta.Summary)
-	s.MetadataDB.SetString(name+".ispage", strconv.FormatBool(meta.IsPage))
-	s.MetadataDB.SetString(name+".tags", strings.Join(meta.Tags, ","))
-	ctime := strconv.FormatInt(meta.CreatedTime, 10)
-	s.MetadataDB.SetString(name+".ctime", ctime)
-	mtime := strconv.FormatInt(meta.ModifiedTime, 10)
-	s.MetadataDB.SetString(name+".mtime", mtime)
-	hits := strconv.FormatInt(meta.Hits, 10)
-	s.MetadataDB.SetString(name+".hits", hits)
+	s.MetadataDB.SetJSON(name, meta)
 }
 
 // TattooStorage.DeleteMetadata deletes metadata by a specified name.
 func (s *TattooStorage) DeleteMetadata(name string) {
-	s.MetadataDB.Delete(name + ".author")
-	s.MetadataDB.Delete(name + ".title")
-	s.MetadataDB.Delete(name + ".tags")
-	s.MetadataDB.Delete(name + ".ctime")
-	s.MetadataDB.Delete(name + ".mtime")
-	s.MetadataDB.Delete(name + ".hits")
+	s.MetadataDB.Delete(name)
 }
 
 // TattooStorage.Dump saves all Indexes of article dbs
@@ -319,7 +319,7 @@ func (s *TattooStorage) GetArticleFull(name string) (*Article, error) {
 	var err error
 	var meta *ArticleMetadata
 	ret := new(Article)
-	meta, err = s.GetMetadata(name)
+	meta, err = s.GetMeta(name)
 	if err != nil {
 		return nil, err
 	}
@@ -344,7 +344,7 @@ func (s *TattooStorage) GetArticleTimeline(from int, count int) ([]*Article, err
 	for i := 0; i < count; i += 1 {
 		name := tlSlice[i]
 		ret[i] = new(Article)
-		meta, err = s.GetMetadata(name)
+		meta, err = s.GetMeta(name)
 		ret[i].Metadata = *meta
 		text, err = s.GetArticle(name)
 		ret[i].Text = template.HTML(text)
@@ -367,7 +367,7 @@ func (s *TattooStorage) GetArticleTimelineByTag(from int, count int, tag string)
 	ret := make([]*Article, 0)
 	for i := 0; i < len(s.ArticleTimeline); i += 1 {
 		name := tlSlice[i]
-		meta, err = s.GetMetadata(name)
+		meta, err = s.GetMeta(name)
 		for _, t := range meta.Tags {
 			if tag == t {
 				a := new(Article)
@@ -403,7 +403,7 @@ func (s *TattooStorage) GetPageTimeline(from int, count int) ([]*Article, error)
 	for i := 0; i < count; i += 1 {
 		name := tlSlice[i]
 		ret[i] = new(Article)
-		meta, err = s.GetMetadata(name)
+		meta, err = s.GetMeta(name)
 		ret[i].Metadata = *meta
 		text, err = s.GetArticle(name)
 		ret[i].Text = template.HTML(text)
@@ -442,7 +442,7 @@ func (s *TattooStorage) RenameTag(origName string, newName string) {
 	}
 	newList := make([]string, 0)
 	for _, k := range lst {
-		meta, err := s.GetMetadata(k.(string))
+		meta, err := s.GetMeta(k.(string))
 		if err != nil {
 			continue
 		}
@@ -529,7 +529,7 @@ func (s *TattooStorage) UpdateArticleTagIndex(name string, tags []string) {
 // assigns several tags to a specified article
 func (s *TattooStorage) DeleteArticleTagIndex(name string) {
 	// detach
-	meta, err := s.GetMetadata(name)
+	meta, err := s.GetMeta(name)
 	if err != nil {
 		return
 	}

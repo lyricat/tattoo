@@ -205,7 +205,7 @@ func HandleFeed(c *webapp.Context, pathLevels []string) {
 		var meta *ArticleMetadata
 		var err error
 		if len(TattooDB.ArticleTimeline) != 0 {
-			meta, err = TattooDB.GetMetadata(TattooDB.ArticleTimeline[0])
+			meta, err = TattooDB.GetMeta(TattooDB.ArticleTimeline[0])
 			if err == nil {
 				TattooDB.SetVar("LastUpdatedTime", TimeRFC3339(meta.ModifiedTime))
 			}
@@ -250,7 +250,7 @@ func HandleWriter(c *webapp.Context, pathLevels []string) {
 			var source []byte
 			if len(pathLevels) >= 3 {
 				name := strings.ToLower(url.QueryEscape(pathLevels[2]))
-				meta, err = TattooDB.GetMetadata(name)
+				meta, err = TattooDB.GetMeta(name)
 				if err == nil {
 					source, err = TattooDB.GetArticleSource(name)
 					if err == nil {
@@ -330,14 +330,14 @@ func HandleUpdateArticle(c *webapp.Context) {
 	if isNew {
 		article.Metadata.CreatedTime = article.Metadata.ModifiedTime
 	} else {
-		meta, err = TattooDB.GetMetadata(origName)
+		meta, err = TattooDB.GetMeta(origName)
 		if err == nil {
 			article.Metadata.CreatedTime = meta.CreatedTime
 			article.Metadata.Hits = meta.Hits
 		}
 	}
 	// check if the name is avaliable.
-	meta, err = TattooDB.GetMetadata(article.Metadata.Name)
+	meta, err = TattooDB.GetMeta(article.Metadata.Name)
 	if isNew && err == nil {
 		article.Metadata.Name = ""
 		err = RenderWriterEditor(c, article)
@@ -446,7 +446,7 @@ func HandleSingle(c *webapp.Context, pagename string) {
 		if err != nil {
 			c.Error(fmt.Sprintf("%s: %s", webapp.ErrInternalServerError, err), http.StatusInternalServerError)
 		}
-		meta, err := TattooDB.GetMetadata(pagename)
+		meta, err := TattooDB.GetMeta(pagename)
 		if err == nil {
 			meta.Hits += 1
 			TattooDB.UpdateMetadata(meta)

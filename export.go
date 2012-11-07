@@ -163,12 +163,15 @@ func (e *Export) GetArticleComments(name string) []*Comment {
 }
 
 func (e *Export) GetArticleMetadata(name string) *ArticleMetadata {
-	meta, _ := TattooDB.GetMetadata(name)
+	meta, _ := TattooDB.GetMeta(name)
 	return meta
 }
 
 func (e *Export) GetArticleTags(name string) []string {
-	meta, _ := TattooDB.GetMetadata(name)
+	meta, err := TattooDB.GetMeta(name)
+	if err != nil {
+		return []string{}
+	}
 	return meta.Tags
 }
 

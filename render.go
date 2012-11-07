@@ -116,13 +116,16 @@ func RenderSinglePage(ctx *webapp.Context, name string, lastMeta *CommentMetadat
 	vars["Name"] = name
 	vars["LastCommentMeta"] = lastMeta
 	data := MakeData(ctx, vars)
-	meta, _ := TattooDB.GetMetadata(name)
+	meta, err := TattooDB.GetMeta(name)
+	if err != nil {
+		return err
+	}
 	if meta.IsPage {
 		data.Flags.Page = true
 	} else {
 		data.Flags.Single = true
 	}
-	err := ctx.Execute(mainTPL, &data)
+	err = ctx.Execute(mainTPL, &data)
 	return err
 }
 
