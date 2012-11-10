@@ -104,7 +104,7 @@ func (s *TattooStorage) RebuildTimeline() {
 	}
 }
 
-// TattooStorage.RebuildCommentTimeline rebuilds an array Tattoo.ArticleTimeline
+// TattooStorage.RebuildCommentTimeline rebuilds an array Tattoo.CommentTimeline
 // which contains all articles' name, order by created time.
 func (s *TattooStorage) RebuildCommentTimeline() {
 	num := s.CommentDB.Count() - 1
@@ -126,9 +126,11 @@ func (s *TattooStorage) RebuildCommentTimeline() {
 		i += 1
 	}
 	sort.Sort(tmp)
+	// reverse
 	for i, j := 0, len(tmp.Items)-1; i < j; i, j = i+1, j-1 {
 		tmp.Items[i], tmp.Items[j] = tmp.Items[j], tmp.Items[i]
 	}
+	// copy
 	for i = range tmp.Items {
 		s.CommentTimeline[i] = tmp.Items[i].Value
 	}
@@ -168,6 +170,7 @@ func (s *TattooStorage) Has(name string) bool {
 	return false
 }
 
+// TattooStorage.GetMetaJSON gets the JSON format metadata of an article specified by the name.
 func (db * TattooStorage) GetMetaJSON(name string) (interface{}, error) {
 	if ! db.MetadataDB.Has(name) {
 		return nil, errors.New(webapp.ErrNotFound)
@@ -180,88 +183,25 @@ func (db * TattooStorage) GetMetaJSON(name string) (interface{}, error) {
 func (db *TattooStorage) GetMeta(name string) (*ArticleMetadata, error) {
 	raw, err := db.GetMetaJSON(name)
 	if err != nil {
-		return nil, errors.New(webapp.ErrNotFound)
-	} else {
-		meta := new (ArticleMetadata)
-		meta.BuildFromJson(raw)
-		return meta, nil
+		return nil, err
 	}
-	return nil, nil
-/*
-	var meta = new(ArticleMetadata)
-	var err error
-	var tags string
-	var ctime, mtime, hits, isPage string
-	meta.Name = name
-	meta.Author, err = s.MetadataDB.GetString(name + ".author")
-	if err != nil {
-		return nil, errors.New(webapp.ErrNotFound)
-	}
-	meta.Title, err = s.MetadataDB.GetString(name + ".title")
-	if err != nil {
-		return nil, errors.New(webapp.ErrNotFound)
-	}
-	// optional meta
-	tags, err = s.MetadataDB.GetString(name + ".tags")
-	if err != nil || len(tags) == 0 {
-		meta.Tags = []string{}
-	} else {
-		meta.Tags = strings.Split(tags, ",")
-	}
-	meta.FeaturedPicURL, err = s.MetadataDB.GetString(name + ".fpic")
-	if err != nil {
-		meta.FeaturedPicURL = ""
-	}
-	meta.Summary, err = s.MetadataDB.GetString(name + ".sum")
-	if err != nil {
-		meta.Summary = ""
-	}
-	isPage, err = s.MetadataDB.GetString(name + ".ispage")
-	if err != nil {
-		meta.IsPage = false
-	} else {
-		meta.IsPage, err = strconv.ParseBool(isPage)
-		if err != nil {
-			meta.IsPage = false
-		}
-	}
-	ctime, err = s.MetadataDB.GetString(name + ".ctime")
-	if err != nil {
-		ctime = "0"
-	}
-	mtime, err = s.MetadataDB.GetString(name + ".mtime")
-	if err != nil {
-		mtime = "0"
-	}
-	hits, err = s.MetadataDB.GetString(name + ".hits")
-	if err != nil {
-		mtime = "0"
-	}
-	meta.CreatedTime, err = strconv.ParseInt(ctime, 0, 64)
-	if err != nil {
-		return nil, errors.New(webapp.ErrInternalServerError)
-	}
-	meta.ModifiedTime, err = strconv.ParseInt(mtime, 0, 64)
-	if err != nil {
-		return nil, errors.New(webapp.ErrInternalServerError)
-	}
-	meta.Hits, err = strconv.ParseInt(hits, 0, 64)
-	if err != nil {
-		return nil, errors.New(webapp.ErrInternalServerError)
-	}
+	meta := new (ArticleMetadata)
+	meta.BuildFromJson(raw)
+	log.Printf("Meta: %v\n", meta)
 	return meta, nil
-*/
 }
 
 // TattooStorage.UpdateMetadata updates a specified metadata
 func (s *TattooStorage) UpdateMetadata(meta *ArticleMetadata) {
 	name := meta.Name
 	s.MetadataDB.SetJSON(name, meta)
+	s.MetadataDB.SaveIndex()
 }
 
 // TattooStorage.DeleteMetadata deletes metadata by a specified name.
 func (s *TattooStorage) DeleteMetadata(name string) {
 	s.MetadataDB.Delete(name)
+	s.MetadataDB.SaveIndex()
 }
 
 // TattooStorage.Dump saves all Indexes of article dbs
@@ -454,7 +394,6 @@ func (s *TattooStorage) RenameTag(origName string, newName string) {
 		s.UpdateMetadata(meta)
 		newList = append(newList, k.(string))
 	}
-	log.Printf("%v", newList)
 	s.TagIndexDB.SetJSON(newName, newList)
 	s.TagIndexDB.Delete(origName)
 	s.TagIndexDB.SaveIndex()
@@ -579,59 +518,35 @@ func (s *TattooStorage) HasComment(uuid string) bool {
 	return false
 }
 
-func (s *TattooStorage) GetCommentMetadata(name string) (*CommentMetadata, error) {
-	var meta = new(CommentMetadata)
-	var meta_map map[string]interface{}
-	// @TODO use CommentMetadata cache to avoid json decoding.
-	jsobj, err := s.CommentMetadataDB.GetJSON(name)
-	if err != nil {
+// TattooStorage.GetCommentMetaJSON gets the JSON format metadata of a comment specified by the name.
+func (db * TattooStorage) GetCommentMetaJSON(name string) (interface{}, error) {
+	if ! db.CommentMetadataDB.Has(name) {
 		return nil, errors.New(webapp.ErrNotFound)
 	}
-	switch vt := jsobj.(type) {
-	case *CommentMetadata:
-		meta = vt
-	default:
-		meta_map = jsobj.(map[string]interface{})
-		for k, v := range meta_map {
-			switch vv := v.(type) {
-			case string:
-				str := vv
-				switch k {
-				case "Name":
-					meta.Name = str
-				case "Author":
-					meta.Author = str
-				case "URL":
-					meta.URL = str
-				case "IP":
-					meta.IP = str
-				case "Email":
-					meta.Email = str
-				case "EmailHash":
-					meta.EmailHash = str
-				case "UAgent":
-					meta.UAgent = str
-				case "ArticleName":
-					meta.ArticleName = str
-				}
-			case float64:
-				if k == "CreatedTime" {
-					meta.CreatedTime = int64(vv)
-				}
-			default:
-			}
-		}
+	meta, _ := db.CommentMetadataDB.GetJSON(name)
+	return meta, nil
+}
+
+// TattooStorage.GetCommentMetaJSON gets the metadata of a comment specified by the name.
+func (db *TattooStorage) GetCommentMetadata(name string) (*CommentMetadata, error) {
+	raw, err := db.GetCommentMetaJSON(name)
+	if err != nil {
+		return nil, err
 	}
+	meta := new (CommentMetadata)
+	meta.BuildFromJson(raw)
 	return meta, nil
 }
 
 func (s *TattooStorage) UpdateCommentMetadata(meta *CommentMetadata) {
 	uuid := meta.Name
 	s.CommentMetadataDB.SetJSON(uuid, meta)
+	s.CommentMetadataDB.SaveIndex()
 }
 
 func (s *TattooStorage) DeleteCommentMetadata(uuid string) {
 	s.CommentMetadataDB.Delete(uuid)
+	s.CommentMetadataDB.SaveIndex()
 }
 
 func (s *TattooStorage) GetComment(uuid string) ([]byte, error) {

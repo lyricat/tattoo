@@ -125,6 +125,40 @@ type CommentMetadata struct {
 	CreatedTime int64
 }
 
+func (m * CommentMetadata) BuildFromJson(json interface{}) {
+	var jsonMap map[string]interface{}
+	jsonMap = json.(map[string]interface{})
+	for k, v := range jsonMap {
+		switch vv := v.(type) {
+		case string:
+			str := vv
+			switch k {
+			case "Name":
+				m.Name = str
+			case "Author":
+				m.Author = str
+			case "URL":
+				m.URL = str
+			case "IP":
+				m.IP = str
+			case "Email":
+				m.Email = str
+			case "EmailHash":
+				m.EmailHash = str
+			case "UAgent":
+				m.UAgent = str
+			case "ArticleName":
+				m.ArticleName = str
+			}
+		case float64:
+			if k == "CreatedTime" {
+				m.CreatedTime = int64(vv)
+			}
+		default:
+		}
+	}
+}
+
 func (meta *CommentMetadata) CreatedTimeHumanReading() string {
 	return TimeHumanReading(meta.CreatedTime)
 }
