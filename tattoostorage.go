@@ -187,7 +187,6 @@ func (db *TattooStorage) GetMeta(name string) (*ArticleMetadata, error) {
 	}
 	meta := new (ArticleMetadata)
 	meta.BuildFromJson(raw)
-	log.Printf("Meta: %v\n", meta)
 	return meta, nil
 }
 

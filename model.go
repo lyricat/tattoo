@@ -85,12 +85,6 @@ func (m * ArticleMetadata) BuildFromJson(json interface{}) {
 				m.FeaturedPicURL = vv
 			case "Summary":
 				m.Summary = vv
-			case "Tags":
-				m.Tags = []string{}
-				tags := strings.Split(vv, ",")
-				for _, t := range tags {
-					m.Tags = append(m.Tags, t)
-				}
 			}
 		case bool:
 			if k == "IsPage" {
@@ -103,6 +97,18 @@ func (m * ArticleMetadata) BuildFromJson(json interface{}) {
 				m.ModifiedTime = int64(vv)
 			} else if k == "Hits" {
 				m.Hits = int64(vv)
+			}
+		default:
+			if k == "Tags" {
+				m.Tags = []string{}
+				if vv != nil {
+					tags := vv.([]interface{})
+					for _, t := range tags {
+						if t.(string) != "" {
+							m.Tags = append(m.Tags, t.(string))
+						}
+					}
+				}
 			}
 		}
 	}
