@@ -9,7 +9,7 @@ import (
 type ArticleMetadata struct {
 	Name           string
 	Author         string
-	IsPage		   bool
+	IsPage         bool
 	Title          string
 	Tags           []string
 	FeaturedPicURL string
@@ -68,7 +68,7 @@ func (meta *ArticleMetadata) HasSummary() bool {
 	return true
 }
 
-func (m * ArticleMetadata) BuildFromJson(json interface{}) {
+func (m *ArticleMetadata) BuildFromJson(json interface{}) {
 	var jsonMap map[string]interface{}
 	jsonMap = json.(map[string]interface{})
 	for k, v := range jsonMap {
@@ -131,7 +131,7 @@ type CommentMetadata struct {
 	CreatedTime int64
 }
 
-func (m * CommentMetadata) BuildFromJson(json interface{}) {
+func (m *CommentMetadata) BuildFromJson(json interface{}) {
 	var jsonMap map[string]interface{}
 	jsonMap = json.(map[string]interface{})
 	for k, v := range jsonMap {

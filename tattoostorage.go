@@ -3,10 +3,10 @@ package main
 import (
 	"errors"
 	"github.com/russross/blackfriday"
+	"github.com/shellex/tattoo/webapp"
 	"html/template"
 	"log"
 	"sort"
-	"github.com/shellex/tattoo/webapp"
 )
 
 type TattooStorage struct {
@@ -21,7 +21,7 @@ type TattooStorage struct {
 	VarDB                webapp.FileStorage
 	ArticleTimeline      []string
 	ArticleTimelineIndex map[string]int
-	PageTimeline		 []string
+	PageTimeline         []string
 	CommentTimeline      []string
 }
 
@@ -61,7 +61,7 @@ func (db *TattooStorage) Load(app *webapp.App) {
 
 // TattooStorage.RebuildTimeline rebuilds an array Tattoo.ArticleTimeline
 // which contains all articles' name, order by created time.
-// And builds a mapping from articles' name to the position of according 
+// And builds a mapping from articles' name to the position of according
 // articles.
 func (s *TattooStorage) RebuildTimeline() {
 	s.ArticleTimeline = make([]string, 0)
@@ -171,8 +171,8 @@ func (s *TattooStorage) Has(name string) bool {
 }
 
 // TattooStorage.GetMetaJSON gets the JSON format metadata of an article specified by the name.
-func (db * TattooStorage) GetMetaJSON(name string) (interface{}, error) {
-	if ! db.MetadataDB.Has(name) {
+func (db *TattooStorage) GetMetaJSON(name string) (interface{}, error) {
+	if !db.MetadataDB.Has(name) {
 		return nil, errors.New(webapp.ErrNotFound)
 	}
 	meta, _ := db.MetadataDB.GetJSON(name)
@@ -185,7 +185,7 @@ func (db *TattooStorage) GetMeta(name string) (*ArticleMetadata, error) {
 	if err != nil {
 		return nil, err
 	}
-	meta := new (ArticleMetadata)
+	meta := new(ArticleMetadata)
 	meta.BuildFromJson(raw)
 	return meta, nil
 }
@@ -518,8 +518,8 @@ func (s *TattooStorage) HasComment(uuid string) bool {
 }
 
 // TattooStorage.GetCommentMetaJSON gets the JSON format metadata of a comment specified by the name.
-func (db * TattooStorage) GetCommentMetaJSON(name string) (interface{}, error) {
-	if ! db.CommentMetadataDB.Has(name) {
+func (db *TattooStorage) GetCommentMetaJSON(name string) (interface{}, error) {
+	if !db.CommentMetadataDB.Has(name) {
 		return nil, errors.New(webapp.ErrNotFound)
 	}
 	meta, _ := db.CommentMetadataDB.GetJSON(name)
@@ -532,7 +532,7 @@ func (db *TattooStorage) GetCommentMetadata(name string) (*CommentMetadata, erro
 	if err != nil {
 		return nil, err
 	}
-	meta := new (CommentMetadata)
+	meta := new(CommentMetadata)
 	meta.BuildFromJson(raw)
 	return meta, nil
 }
@@ -646,7 +646,7 @@ func (s *TattooStorage) DeleteComment(uuid string) {
 	s.CommentHTMLDB.SaveIndex()
 }
 
-// AddComment adds a new comment, both meta and content. 
+// AddComment adds a new comment, both meta and content.
 // Also adds an item in Comment Index DB
 func (s *TattooStorage) AddComment(comment *Comment) {
 	var lst []interface{}

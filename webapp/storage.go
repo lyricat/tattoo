@@ -1,163 +1,163 @@
 package webapp
 
 import (
-    "encoding/json"
+	"encoding/json"
 	"errors"
-    "fmt"
-    "io/ioutil"
-    "os"
-    "path"
-    "path/filepath"
-    "time"
+	"fmt"
+	"io/ioutil"
+	"os"
+	"path"
+	"path/filepath"
+	"time"
 )
 
 const (
-    OP_SAVE = 0
+	OP_SAVE = 0
 )
 
 type Storage interface {
-    Get(string) string
-    Set(string) string
-    Delete(string) string
+	Get(string) string
+	Set(string) string
+	Delete(string) string
 }
 
 type StorageStat struct {
-    GetCount       int64
-    SetCount       int64
-    DeleteCount    int64
-    HasCount       int64
-    SaveIndexCount int64
+	GetCount       int64
+	SetCount       int64
+	DeleteCount    int64
+	HasCount       int64
+	SaveIndexCount int64
 }
 
 type StorageCmdItem struct {
-    Op   int
-    Arg1 interface{}
+	Op   int
+	Arg1 interface{}
 }
 
 type FileStorage struct {
-    Path  string
-    Mode  int
-    Index map[string]string
-    Stat  StorageStat
-    // @TODO
-    GetChan chan string
-    SetChan chan string
-    CmdChan chan *StorageCmdItem
+	Path  string
+	Mode  int
+	Index map[string]string
+	Stat  StorageStat
+	// @TODO
+	GetChan chan string
+	SetChan chan string
+	CmdChan chan *StorageCmdItem
 }
 
 const (
-    FILE_STORAGE_MODE_SINGLE  = 0
-    FILE_STORAGE_MODE_MULIPLE = 1
+	FILE_STORAGE_MODE_SINGLE  = 0
+	FILE_STORAGE_MODE_MULIPLE = 1
 )
 
 const (
-	ERROR_UNKNOWN			= "Unknown Error"
-	ERROR_KEY_NOT_EXISTS	= "Key doesn't exists"
-	ERROR_IMPERMEABLE_KEY	= "Impereable Key"
+	ERROR_UNKNOWN         = "Unknown Error"
+	ERROR_KEY_NOT_EXISTS  = "Key doesn't exists"
+	ERROR_IMPERMEABLE_KEY = "Impereable Key"
 )
 
 func (fs *FileStorage) Init(path string, mode int) error {
-    fs.Path = path
-    fs.Mode = mode
-    fs.CmdChan = make(chan *StorageCmdItem)
-    fs.GetChan = make(chan string)
-    fs.SetChan = make(chan string)
-    fs.Index = make(map[string]string)
-    fs.Index["*"] = "placeholder"
-    indexPath := fs.getIndexFilePath()
-    _, err := ioutil.ReadFile(indexPath)
-    if err != nil {
-        fmt.Println("Read index file failed, create new one:", err)
-        dir, _ := filepath.Split(indexPath)
-        os.MkdirAll(dir, 0755)
-        fs.SaveIndex()
-    }
-    fs.LoadIndex()
-    go fs.Master()
-    go func() {
-        for {
-            time.Sleep(120 * 1e9)
-            cmd := new(StorageCmdItem)
-            cmd.Op = OP_SAVE
-            fs.CmdChan <- cmd
-        }
-    }()
-    return nil
+	fs.Path = path
+	fs.Mode = mode
+	fs.CmdChan = make(chan *StorageCmdItem)
+	fs.GetChan = make(chan string)
+	fs.SetChan = make(chan string)
+	fs.Index = make(map[string]string)
+	fs.Index["*"] = "placeholder"
+	indexPath := fs.getIndexFilePath()
+	_, err := ioutil.ReadFile(indexPath)
+	if err != nil {
+		fmt.Println("Read index file failed, create new one:", err)
+		dir, _ := filepath.Split(indexPath)
+		os.MkdirAll(dir, 0755)
+		fs.SaveIndex()
+	}
+	fs.LoadIndex()
+	go fs.Master()
+	go func() {
+		for {
+			time.Sleep(120 * 1e9)
+			cmd := new(StorageCmdItem)
+			cmd.Op = OP_SAVE
+			fs.CmdChan <- cmd
+		}
+	}()
+	return nil
 }
 
 func (fs *FileStorage) Master() {
-    for {
-        select {
-        case cmd := <-fs.CmdChan:
-            if cmd.Op == OP_SAVE {
-                fs.SaveIndex()
-            }
-        case v := <-fs.GetChan:
-            // @TODO get value
-            print(v)
-        case v := <-fs.SetChan:
-            // @TODO set value
-            print(v)
-        }
-    }
+	for {
+		select {
+		case cmd := <-fs.CmdChan:
+			if cmd.Op == OP_SAVE {
+				fs.SaveIndex()
+			}
+		case v := <-fs.GetChan:
+			// @TODO get value
+			print(v)
+		case v := <-fs.SetChan:
+			// @TODO set value
+			print(v)
+		}
+	}
 }
 
 func (fs *FileStorage) Get(key string) ([]byte, error) {
-    if key == "*" {
-        return nil, errors.New(ERROR_IMPERMEABLE_KEY)
-    }
-    fs.Stat.GetCount++
-    if fs.Mode == FILE_STORAGE_MODE_SINGLE {
-        if val, ok := fs.Index[key]; ok {
-            return []byte(val), nil
-        } else {
-            return nil, errors.New(ERROR_KEY_NOT_EXISTS)
-        }
-    } else if fs.Mode == FILE_STORAGE_MODE_MULIPLE {
-        if _, ok := fs.Index[key]; ok {
-            valueFilePath := path.Join(fs.Path, key)
-            value, err := ioutil.ReadFile(valueFilePath)
-            if err != nil {
-                fmt.Println("FileStorage.Get, Read file failed:", err)
-                return nil, err
-            }
-            return value, nil
-        } else {
-            return nil, errors.New(ERROR_KEY_NOT_EXISTS)
-        }
-    }
-    return nil, errors.New(ERROR_UNKNOWN)
+	if key == "*" {
+		return nil, errors.New(ERROR_IMPERMEABLE_KEY)
+	}
+	fs.Stat.GetCount++
+	if fs.Mode == FILE_STORAGE_MODE_SINGLE {
+		if val, ok := fs.Index[key]; ok {
+			return []byte(val), nil
+		} else {
+			return nil, errors.New(ERROR_KEY_NOT_EXISTS)
+		}
+	} else if fs.Mode == FILE_STORAGE_MODE_MULIPLE {
+		if _, ok := fs.Index[key]; ok {
+			valueFilePath := path.Join(fs.Path, key)
+			value, err := ioutil.ReadFile(valueFilePath)
+			if err != nil {
+				fmt.Println("FileStorage.Get, Read file failed:", err)
+				return nil, err
+			}
+			return value, nil
+		} else {
+			return nil, errors.New(ERROR_KEY_NOT_EXISTS)
+		}
+	}
+	return nil, errors.New(ERROR_UNKNOWN)
 }
 
 func (fs *FileStorage) Has(key string) bool {
-    if key == "*" {
-        return false
-    }
-    fs.Stat.HasCount++
-    if _, ok := fs.Index[key]; ok {
-        return true
-    }
-    return false
+	if key == "*" {
+		return false
+	}
+	fs.Stat.HasCount++
+	if _, ok := fs.Index[key]; ok {
+		return true
+	}
+	return false
 }
 
 func (fs *FileStorage) Set(key string, value []byte) error {
-    fs.Stat.SetCount++
-    if fs.Mode == FILE_STORAGE_MODE_SINGLE {
-        fs.Index[key] = string(value)
-    } else if fs.Mode == FILE_STORAGE_MODE_MULIPLE {
-        valueFilePath := path.Join(fs.Path, key)
-        fs.Index[key] = valueFilePath
+	fs.Stat.SetCount++
+	if fs.Mode == FILE_STORAGE_MODE_SINGLE {
+		fs.Index[key] = string(value)
+	} else if fs.Mode == FILE_STORAGE_MODE_MULIPLE {
+		valueFilePath := path.Join(fs.Path, key)
+		fs.Index[key] = valueFilePath
 		if err := ioutil.WriteFile(valueFilePath, value, 0644); err != nil {
-			return err;
+			return err
 		}
-    }
-    return nil
+	}
+	return nil
 }
 func (fs *FileStorage) GetString(key string) (string, error) {
-    str, err := fs.Get(key)
-    if err != nil {
-        return "", err
-    }
+	str, err := fs.Get(key)
+	if err != nil {
+		return "", err
+	}
 	return string(str), err
 }
 
@@ -169,16 +169,16 @@ func (fs *FileStorage) SetString(key string, value string) error {
 // and returns.
 // if this key doesn't exists or failed to parse json, return nil, err
 func (fs *FileStorage) GetJSON(key string) (interface{}, error) {
-    var jsobj interface{}
-    str, err := fs.Get(key)
-    if err != nil {
-        return nil, err
-    }
+	var jsobj interface{}
+	str, err := fs.Get(key)
+	if err != nil {
+		return nil, err
+	}
 	if err := json.Unmarshal(str, &jsobj); err != nil {
 		fmt.Printf("FileStorage.GetJSON, Unmarshal json failed (%v):%s\n", key, err)
-        return nil, err
+		return nil, err
 	}
-    return jsobj, nil
+	return jsobj, nil
 }
 
 func (fs *FileStorage) SetJSON(key string, value interface{}) error {
@@ -191,54 +191,54 @@ func (fs *FileStorage) SetJSON(key string, value interface{}) error {
 }
 
 func (fs *FileStorage) Delete(key string) {
-    fs.Stat.DeleteCount++
-    if fs.Mode == FILE_STORAGE_MODE_SINGLE {
-        delete(fs.Index, key)
-    } else if fs.Mode == FILE_STORAGE_MODE_MULIPLE {
-        delete(fs.Index, key)
-        valueFilePath := path.Join(fs.Path, key)
-        os.Remove(valueFilePath)
-    }
+	fs.Stat.DeleteCount++
+	if fs.Mode == FILE_STORAGE_MODE_SINGLE {
+		delete(fs.Index, key)
+	} else if fs.Mode == FILE_STORAGE_MODE_MULIPLE {
+		delete(fs.Index, key)
+		valueFilePath := path.Join(fs.Path, key)
+		os.Remove(valueFilePath)
+	}
 }
 
 func (fs *FileStorage) Count() int {
-    return len(fs.Index)
+	return len(fs.Index)
 }
 
 func (fs *FileStorage) SaveIndex() error {
-    indexPath := fs.getIndexFilePath()
-    buff, err := json.Marshal(fs.Index)
-    if err != nil {
-        fmt.Printf("FileStorage.SaveIndex, Marshal json failed (%v):%s\n", indexPath, err)
-        return err
-    }
-    fs.Stat.SaveIndexCount++
+	indexPath := fs.getIndexFilePath()
+	buff, err := json.Marshal(fs.Index)
+	if err != nil {
+		fmt.Printf("FileStorage.SaveIndex, Marshal json failed (%v):%s\n", indexPath, err)
+		return err
+	}
+	fs.Stat.SaveIndexCount++
 	if err := ioutil.WriteFile(indexPath, buff, 0644); err != nil {
 		return err
 	}
-    return nil
+	return nil
 }
 
 func (fs *FileStorage) LoadIndex() error {
-    indexPath := fs.getIndexFilePath()
-    buff, err := ioutil.ReadFile(indexPath)
-    if err != nil {
-        fmt.Println("FileStorage.LoadIndex, Read file failed:", err)
-        return err
-    }
-    if err := json.Unmarshal(buff, &fs.Index); err != nil {
-        fmt.Printf("FileStorage.LoadIndex, Unmarshal json failed (%v):%s\n", indexPath, err)
-        return err
-    }
-    return nil
+	indexPath := fs.getIndexFilePath()
+	buff, err := ioutil.ReadFile(indexPath)
+	if err != nil {
+		fmt.Println("FileStorage.LoadIndex, Read file failed:", err)
+		return err
+	}
+	if err := json.Unmarshal(buff, &fs.Index); err != nil {
+		fmt.Printf("FileStorage.LoadIndex, Unmarshal json failed (%v):%s\n", indexPath, err)
+		return err
+	}
+	return nil
 }
 
 func (fs *FileStorage) getIndexFilePath() string {
 	var indexPath string
-    if fs.Mode == FILE_STORAGE_MODE_SINGLE {
-        indexPath = fs.Path
-    } else if fs.Mode == FILE_STORAGE_MODE_MULIPLE {
-        indexPath = path.Join(fs.Path, "index.json")
-    }
-    return indexPath
+	if fs.Mode == FILE_STORAGE_MODE_SINGLE {
+		indexPath = fs.Path
+	} else if fs.Mode == FILE_STORAGE_MODE_MULIPLE {
+		indexPath = path.Join(fs.Path, "index.json")
+	}
+	return indexPath
 }

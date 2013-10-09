@@ -68,7 +68,6 @@ func (e *Export) GetNextPageTLPos(offset int, count int) int {
 	return next
 }
 
-
 func (e *Export) GetPrevCommentTLPos(offset int, count int) int {
 	if count <= 0 {
 		count = GetConfig().TimelineCount
@@ -183,22 +182,22 @@ func (e *Export) GetTagList(count int) []TagWrapper {
 	return ret[0:count]
 }
 
-func (e * Export) GetRootURL() string {
+func (e *Export) GetRootURL() string {
 	ret, _ := TattooDB.GetVar("RootURL")
 	return ret
 }
 
-func (e * Export) GetThemeURL() string {
+func (e *Export) GetThemeURL() string {
 	ret, _ := TattooDB.GetVar("ThemeURL")
 	return ret
 }
 
-func (e * Export) GetThemeStaticURL() string {
+func (e *Export) GetThemeStaticURL() string {
 	ret, _ := TattooDB.GetVar("ThemeStaticURL")
 	return ret
 }
 
-func (e * Export) GetSystemStaticURL() string {
+func (e *Export) GetSystemStaticURL() string {
 	ret, _ := TattooDB.GetVar("SystemStaticURL")
 	return ret
 }

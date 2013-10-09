@@ -12,11 +12,11 @@ const CONFIG_NAME = "settings.json"
 
 type Config struct {
 	// sys config
-	Port          int
-	Certificate   string
-	Path	      string
-	SiteBase      string
-	SiteURL       string
+	Port        int
+	Certificate string
+	Path        string
+	SiteBase    string
+	SiteURL     string
 	// site config
 	SiteTitle     string
 	SiteSubTitle  string
