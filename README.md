@@ -2,7 +2,7 @@
 
 ##Demo
 
- - shellex's blog: [shellex.info](http://shellex.info)
+ - shellex's blog: [shellex.info](http://shellex.info) (not available, now i use [hexo](http://hexo.io) )
 
 ##Build & Install & Run
 
