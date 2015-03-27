@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
+	"github.com/shellex/tattoo/webapp"
 	"html/template"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
 	"time"
-	"github.com/shellex/tattoo/webapp"
 )
 
 const NOT_FOUND_MESSAGE = "Sorry, the page you were looking does not exist."
@@ -21,6 +21,7 @@ func isAuthorized(c *webapp.Context) bool {
 	}
 	return false
 }
+
 // Root Handler.
 func HandleRoot(c *webapp.Context) {
 	c.Info.UseGZip = strings.Index(c.Request.Header.Get("Accept-Encoding"), "gzip") > -1
@@ -153,7 +154,7 @@ func HandleComment(c *webapp.Context) {
 		comment.Metadata.Email = strings.Trim(c.Request.FormValue("email"), " ")
 		comment.Metadata.URL = strings.Trim(c.Request.FormValue("url"), " ")
 		if len(comment.Metadata.URL) != 0 && strings.Index(comment.Metadata.URL, "http://") == -1 && strings.Index(comment.Metadata.URL, "https://") == -1 {
-			comment.Metadata.URL = "http://" + comment.Metadata.URL;
+			comment.Metadata.URL = "http://" + comment.Metadata.URL
 		}
 		comment.Text = template.HTML(strings.Trim(c.Request.FormValue("text"), " "))
 
@@ -408,16 +409,16 @@ func HandleUpdateSystemSettings(c *webapp.Context) {
 		return
 	}
 	var newConfig Config
-	newConfig.Port          = port
-	newConfig.Certificate   = certificate
-	newConfig.SiteBase      = sitebase
-	newConfig.SiteURL       = siteurl
-	newConfig.SiteTitle     = sitetitle
-	newConfig.SiteSubTitle  = sitesubtitle
-	newConfig.Path		    = path
-	newConfig.AuthorName    = author
+	newConfig.Port = port
+	newConfig.Certificate = certificate
+	newConfig.SiteBase = sitebase
+	newConfig.SiteURL = siteurl
+	newConfig.SiteTitle = sitetitle
+	newConfig.SiteSubTitle = sitesubtitle
+	newConfig.Path = path
+	newConfig.AuthorName = author
 	newConfig.TimelineCount = timelinecount
-	newConfig.ThemeName     = theme
+	newConfig.ThemeName = theme
 	cfg := GetConfig()
 	cfg.Update(&newConfig)
 	cfg.Save()

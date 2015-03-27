@@ -1,20 +1,20 @@
 package main
 
 import (
-	"time"
 	"github.com/shellex/tattoo/webapp"
+	"time"
 )
 
 type T_FLAGS struct {
-	Home   bool
+	Home     bool
 	Articles bool
-	Single bool
-	Tag bool
-	Page bool
-	Feed   bool
+	Single   bool
+	Tag      bool
+	Page     bool
+	Feed     bool
 
 	WriterOverview bool
-	WriterPages	   bool
+	WriterPages    bool
 	WriterTags     bool
 	WriterComments bool
 	WriterSettings bool

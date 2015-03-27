@@ -3,12 +3,12 @@ package main
 import (
 	"errors"
 	"fmt"
+	"github.com/shellex/tattoo/webapp"
 	"html/template"
 	"net/http"
-	"strings"
-	"github.com/shellex/tattoo/webapp"
-	"reflect"
 	"os"
+	"reflect"
+	"strings"
 )
 
 var mainTPL *template.Template
@@ -70,7 +70,7 @@ func LoadSystemTemplates() error {
 func LoadThemeTemplates(themeName string) error {
 	var err error
 	// required templates
-	required_files := []string {
+	required_files := []string{
 		"theme/%s/template/bare.html",
 		"theme/%s/template/header.html",
 		"theme/%s/template/footer.html",
@@ -81,7 +81,7 @@ func LoadThemeTemplates(themeName string) error {
 		"theme/%s/template/page.html",
 		// replace with articles.html if doesn't exist
 		"theme/%s/template/home.html"}
-	files := make([]string, 0);
+	files := make([]string, 0)
 	for _, filename := range required_files {
 		filename = fmt.Sprintf(filename, themeName)
 		if _, err := os.Stat(filename); err == nil {
